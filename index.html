@@ -13,13 +13,7 @@
     </script>
 
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: Arial, Helvetica, sans-serif;
-        }
-
+        /* ─── CSS VARIABLES ─── */
         :root {
             --primary: #087f5b;
             --primary2: #0ca678;
@@ -30,58 +24,109 @@
             --danger: #e03131;
             --warning: #f08c00;
             --shadow: 0 10px 30px rgba(0, 0, 0, .08);
+            --bg: #f6fbf8;
+            --card-bg: #fff;
+            --text: #17352c;
+            --border: #e5eee9;
+            --input-bg: #fff;
+            --sidebar-bg: #073b2a;
+            --sidebar-text: #d9f8eb;
+            --nav-bg: #fff;
+            --badge-pending: #fff3bf;
+            --badge-paid: #d3f9d8;
+            --badge-delivered: #d3f9d8;
+            --badge-out: #d0ebff;
+            --transition: 0.3s ease;
+        }
+
+        [data-theme="dark"] {
+            --bg: #121212;
+            --card-bg: #1e1e1e;
+            --text: #e8f0ed;
+            --border: #2d3a35;
+            --input-bg: #2a2a2a;
+            --sidebar-bg: #0a1f16;
+            --sidebar-text: #b8d9cb;
+            --nav-bg: #1a1a1a;
+            --shadow: 0 10px 30px rgba(0, 0, 0, .4);
+            --badge-pending: #3d2e00;
+            --badge-paid: #003d1a;
+            --badge-delivered: #003d1a;
+            --badge-out: #001a3d;
+            --light: #1a2a22;
+            --white: #1e1e1e;
+            --gray: #a0b0a8;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Arial, Helvetica, sans-serif;
+            transition: background var(--transition), color var(--transition), border var(--transition), box-shadow var(--transition);
         }
 
         body {
-            background: #f6fbf8;
-            color: #17352c;
+            background: var(--bg);
+            color: var(--text);
         }
 
         button,
         input,
-        select {
+        select,
+        textarea {
             font: inherit;
         }
-
         button {
             cursor: pointer;
         }
-
         .hidden {
             display: none !important;
         }
-
         .screen {
             min-height: 100vh;
         }
 
-        /* LOGIN */
+        /* ─── SCROLLBAR ─── */
+        ::-webkit-scrollbar {
+            width: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: var(--bg);
+        }
+        ::-webkit-scrollbar-thumb {
+            background: var(--primary);
+            border-radius: 8px;
+        }
+
+        /* ─── AUTH ─── */
         .auth-screen {
             min-height: 100vh;
             display: flex;
             justify-content: center;
             align-items: center;
             padding: 20px;
-            background:
-                radial-gradient(circle at top left, #b2f2d8, transparent 35%),
+            background: radial-gradient(circle at top left, #b2f2d8, transparent 35%),
                 radial-gradient(circle at bottom right, #d3f9d8, transparent 35%),
-                #f5fff9;
+                var(--bg);
         }
-
+        [data-theme="dark"] .auth-screen {
+            background: radial-gradient(circle at top left, #0a2a1a, transparent 35%),
+                radial-gradient(circle at bottom right, #0a1a0a, transparent 35%),
+                var(--bg);
+        }
         .auth-box {
             width: 100%;
             max-width: 450px;
-            background: white;
+            background: var(--card-bg);
             border-radius: 25px;
             padding: 35px;
             box-shadow: var(--shadow);
         }
-
         .logo {
             text-align: center;
             margin-bottom: 25px;
         }
-
         .logo-icon {
             width: 75px;
             height: 75px;
@@ -91,83 +136,89 @@
             align-items: center;
             justify-content: center;
             background: var(--primary);
-            color: white;
+            color: #fff;
             font-size: 35px;
         }
-
         .logo h1 {
             margin-top: 12px;
-            color: var(--dark);
+            color: var(--text);
         }
-
         .logo p {
             color: var(--gray);
             margin-top: 5px;
         }
-
         .auth-tabs {
             display: flex;
-            background: #eef8f3;
+            background: var(--bg);
             padding: 5px;
             border-radius: 12px;
             margin-bottom: 22px;
         }
-
         .auth-tabs button {
             width: 50%;
             border: 0;
             padding: 12px;
             background: transparent;
             border-radius: 9px;
+            color: var(--text);
         }
-
         .auth-tabs button.active {
-            background: white;
+            background: var(--card-bg);
             color: var(--primary);
             font-weight: bold;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, .05);
+            box-shadow: var(--shadow);
         }
-
         .form-group {
             margin-bottom: 15px;
         }
-
         .form-group label {
             display: block;
             margin-bottom: 7px;
             font-size: 14px;
             font-weight: bold;
+            color: var(--text);
         }
-
         .form-group input,
-        .form-group select {
+        .form-group select,
+        .form-group textarea {
             width: 100%;
             padding: 13px 14px;
-            border: 1px solid #d8e5df;
+            border: 1px solid var(--border);
             border-radius: 10px;
             outline: none;
+            background: var(--input-bg);
+            color: var(--text);
         }
-
         .form-group input:focus,
-        .form-group select:focus {
+        .form-group select:focus,
+        .form-group textarea:focus {
             border-color: var(--primary2);
         }
-
         .primary-btn {
             width: 100%;
             border: 0;
             background: var(--primary);
-            color: white;
+            color: #fff;
             padding: 14px;
             border-radius: 10px;
             font-weight: bold;
             margin-top: 5px;
         }
-
         .primary-btn:hover {
             background: var(--dark);
+            opacity: 0.9;
         }
-
+        .secondary-btn {
+            border: 0;
+            background: var(--border);
+            color: var(--text);
+            padding: 10px 18px;
+            border-radius: 10px;
+            font-weight: bold;
+        }
+        .secondary-btn:hover {
+            opacity: 0.8;
+        }
         .auth-message {
             margin-top: 15px;
             text-align: center;
@@ -175,15 +226,14 @@
             color: var(--danger);
         }
 
-        /* APP */
+        /* ─── APP ─── */
         .app {
             min-height: 100vh;
         }
-
         .navbar {
             height: 70px;
-            background: white;
-            border-bottom: 1px solid #e5eee9;
+            background: var(--nav-bg);
+            border-bottom: 1px solid var(--border);
             display: flex;
             align-items: center;
             justify-content: space-between;
@@ -192,39 +242,50 @@
             top: 0;
             z-index: 100;
         }
-
         .nav-brand {
             display: flex;
             align-items: center;
             gap: 12px;
         }
-
         .nav-brand .mini-logo {
             width: 42px;
             height: 42px;
             border-radius: 50%;
             background: var(--primary);
-            color: white;
+            color: #fff;
             display: flex;
             align-items: center;
             justify-content: center;
         }
-
         .nav-brand h2 {
             font-size: 20px;
-            color: var(--dark);
+            color: var(--text);
         }
-
         .nav-right {
             display: flex;
             align-items: center;
             gap: 15px;
+            flex-wrap: wrap;
         }
-
         .user-name {
             font-weight: bold;
+            color: var(--text);
         }
-
+        .lang-btn,
+        .theme-btn {
+            border: 0;
+            padding: 7px 12px;
+            border-radius: 8px;
+            background: var(--bg);
+            color: var(--text);
+            font-weight: bold;
+            font-size: 13px;
+        }
+        .lang-btn:hover,
+        .theme-btn:hover {
+            background: var(--primary);
+            color: #fff;
+        }
         .logout-btn {
             border: 0;
             padding: 9px 15px;
@@ -232,119 +293,131 @@
             background: #ffe3e3;
             color: #c92a2a;
         }
+        [data-theme="dark"] .logout-btn {
+            background: #3d1a1a;
+            color: #ff6b6b;
+        }
+        .logout-btn:hover {
+            opacity: 0.8;
+        }
 
         .layout {
             display: flex;
             min-height: calc(100vh - 70px);
         }
-
         .sidebar {
             width: 245px;
-            background: var(--dark);
+            background: var(--sidebar-bg);
             padding: 20px 12px;
-            color: white;
+            color: var(--sidebar-text);
+            overflow-y: auto;
+            flex-shrink: 0;
         }
-
         .sidebar button {
             display: block;
             width: 100%;
             text-align: left;
             border: 0;
             background: transparent;
-            color: #d9f8eb;
+            color: var(--sidebar-text);
             padding: 13px 15px;
             margin-bottom: 5px;
             border-radius: 9px;
+            font-size: 14px;
+            transition: 0.2s;
         }
-
         .sidebar button:hover,
         .sidebar button.active {
             background: var(--primary);
-            color: white;
+            color: #fff;
         }
-
+        .sidebar .nav-label {
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: var(--gray);
+            padding: 10px 15px 5px;
+            opacity: 0.7;
+        }
         .content {
             flex: 1;
             padding: 28px;
             overflow: hidden;
+            background: var(--bg);
         }
-
         .page-title {
             margin-bottom: 22px;
         }
-
         .page-title h1 {
             font-size: 28px;
-            color: var(--dark);
+            color: var(--text);
         }
-
         .page-title p {
             color: var(--gray);
             margin-top: 5px;
         }
 
-        /* CARDS */
+        /* ─── CARDS & STATS ─── */
         .stats {
             display: grid;
             grid-template-columns: repeat(4, 1fr);
             gap: 18px;
             margin-bottom: 25px;
         }
-
         .stat-card {
-            background: white;
+            background: var(--card-bg);
             padding: 22px;
             border-radius: 16px;
             box-shadow: var(--shadow);
         }
-
         .stat-card .icon {
             font-size: 28px;
             margin-bottom: 10px;
         }
-
         .stat-card h3 {
             font-size: 26px;
-            color: var(--dark);
+            color: var(--text);
         }
-
         .stat-card p {
             color: var(--gray);
             margin-top: 4px;
         }
-
         .grid {
             display: grid;
             grid-template-columns: repeat(2, 1fr);
             gap: 20px;
         }
-
         .card {
-            background: white;
+            background: var(--card-bg);
             border-radius: 17px;
             padding: 22px;
             box-shadow: var(--shadow);
             margin-bottom: 20px;
         }
-
         .card h2 {
-            color: var(--dark);
+            color: var(--text);
             margin-bottom: 18px;
+            font-size: 20px;
         }
-
         .card h3 {
             margin-bottom: 10px;
+            color: var(--text);
         }
-
         .info-row {
             display: flex;
             justify-content: space-between;
             padding: 11px 0;
-            border-bottom: 1px solid #edf2ef;
+            border-bottom: 1px solid var(--border);
+            color: var(--text);
         }
-
         .info-row:last-child {
             border-bottom: 0;
+        }
+        .info-row span {
+            color: var(--gray);
+        }
+        .info-row strong {
+            color: var(--text);
         }
 
         .badge {
@@ -354,430 +427,452 @@
             font-size: 12px;
             font-weight: bold;
         }
-
         .badge.green {
-            background: #d3f9d8;
+            background: var(--badge-paid);
             color: #2b8a3e;
         }
-
         .badge.orange {
-            background: #fff3bf;
+            background: var(--badge-pending);
             color: #e67700;
         }
-
         .badge.red {
             background: #ffe3e3;
             color: #c92a2a;
         }
-
         .badge.blue {
-            background: #d0ebff;
+            background: var(--badge-out);
             color: #1971c2;
         }
+        [data-theme="dark"] .badge.green {
+            color: #6fcf97;
+        }
+        [data-theme="dark"] .badge.orange {
+            color: #f2c94c;
+        }
+        [data-theme="dark"] .badge.blue {
+            color: #5b9bd5;
+        }
+        [data-theme="dark"] .badge.red {
+            color: #ff6b6b;
+        }
 
-        /* TABLE */
+        /* ─── TABLE ─── */
         .table-wrap {
             overflow-x: auto;
         }
-
         table {
             width: 100%;
             border-collapse: collapse;
         }
-
         th,
         td {
             padding: 13px;
             text-align: left;
-            border-bottom: 1px solid #e9efec;
+            border-bottom: 1px solid var(--border);
             white-space: nowrap;
+            color: var(--text);
         }
-
         th {
-            background: #f0f8f4;
-            color: var(--dark);
+            background: var(--bg);
+            color: var(--text);
+            font-weight: 600;
         }
-
         .action-btn {
             border: 0;
             padding: 7px 11px;
             border-radius: 7px;
             margin-right: 4px;
+            font-size: 12px;
         }
-
-        .edit {
-            background: #d0ebff;
-            color: #1864ab;
+        .action-btn.success {
+            background: var(--badge-paid);
+            color: #2b8a3e;
         }
-
-        .delete {
+        .action-btn.warning {
+            background: var(--badge-pending);
+            color: #e67700;
+        }
+        .action-btn.blue {
+            background: var(--badge-out);
+            color: #1971c2;
+        }
+        .action-btn.danger {
             background: #ffe3e3;
             color: #c92a2a;
         }
-
-        .success {
-            background: #d3f9d8;
-            color: #2b8a3e;
+        [data-theme="dark"] .action-btn.success {
+            color: #6fcf97;
+        }
+        [data-theme="dark"] .action-btn.warning {
+            color: #f2c94c;
+        }
+        [data-theme="dark"] .action-btn.blue {
+            color: #5b9bd5;
+        }
+        [data-theme="dark"] .action-btn.danger {
+            color: #ff6b6b;
         }
 
-        .warning {
-            background: #fff3bf;
-            color: #e67700;
-        }
-
-        /* SUBSCRIPTION */
+        /* ─── SUBSCRIPTION ─── */
         .product-grid {
             display: grid;
             grid-template-columns: repeat(2, 1fr);
             gap: 15px;
         }
-
         .product-option {
-            border: 2px solid #e5eee9;
+            border: 2px solid var(--border);
             padding: 18px;
             border-radius: 14px;
             cursor: pointer;
+            background: var(--card-bg);
+            color: var(--text);
         }
-
         .product-option.selected {
             border-color: var(--primary);
-            background: #effcf6;
+            background: var(--light);
         }
-
+        [data-theme="dark"] .product-option.selected {
+            background: #0a2a1a;
+        }
         .product-option h3 {
             margin-bottom: 7px;
+            color: var(--text);
         }
-
         .product-option p {
             color: var(--gray);
         }
 
-        /* BILL */
+        /* ─── BILL ─── */
         .bill {
-            border: 1px dashed #b7c9c0;
+            border: 1px dashed var(--border);
             border-radius: 14px;
             padding: 20px;
-            background: #fbfffd;
+            background: var(--bg);
         }
-
         .bill-total {
             font-size: 30px;
             font-weight: bold;
             color: var(--primary);
         }
 
-        /* TOAST */
+        /* ─── TOAST ─── */
         .toast {
             position: fixed;
             right: 20px;
             bottom: 20px;
-            background: #073b2a;
-            color: white;
+            background: var(--dark);
+            color: #fff;
             padding: 14px 18px;
             border-radius: 10px;
             box-shadow: var(--shadow);
             z-index: 999;
             transform: translateY(100px);
             opacity: 0;
-            transition: .3s;
+            transition: 0.3s;
+            max-width: 350px;
         }
-
         .toast.show {
             transform: translateY(0);
             opacity: 1;
         }
 
-        /* MOBILE */
+        /* ─── FEEDBACK STARS ─── */
+        .stars {
+            display: flex;
+            gap: 8px;
+            font-size: 30px;
+            cursor: pointer;
+        }
+        .stars span {
+            transition: 0.2s;
+            color: var(--gray);
+        }
+        .stars span.active {
+            color: #f59f00;
+        }
+        .stars span:hover {
+            transform: scale(1.1);
+        }
+
+        /* ─── MOBILE ─── */
         .mobile-menu {
             display: none;
             border: 0;
             background: transparent;
             font-size: 25px;
+            color: var(--text);
         }
 
-        @media(max-width:1000px) {
+        @media (max-width: 1000px) {
             .stats {
                 grid-template-columns: repeat(2, 1fr);
             }
         }
-
-        @media(max-width:750px) {
+        @media (max-width: 750px) {
             .sidebar {
                 position: fixed;
-                left: -260px;
+                left: -270px;
                 top: 70px;
                 bottom: 0;
                 z-index: 200;
-                transition: .3s;
+                transition: 0.3s;
+                width: 260px;
             }
-
             .sidebar.open {
                 left: 0;
             }
-
             .mobile-menu {
                 display: block;
             }
-
             .nav-brand h2 {
                 font-size: 16px;
             }
-
             .user-name {
                 display: none;
             }
-
             .content {
                 padding: 18px;
             }
-
             .stats {
                 grid-template-columns: 1fr;
             }
-
             .grid,
             .product-grid {
                 grid-template-columns: 1fr;
             }
-
             .auth-box {
                 padding: 25px;
             }
+            .nav-right .lang-btn span {
+                display: none;
+            }
+        }
+
+        /* ─── MISC ─── */
+        .flex-between {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+        .mt-10 {
+            margin-top: 10px;
+        }
+        .mb-10 {
+            margin-bottom: 10px;
+        }
+        .gap-10 {
+            gap: 10px;
+        }
+        .text-center {
+            text-align: center;
+        }
+        .text-muted {
+            color: var(--gray);
+        }
+        .w-full {
+            width: 100%;
+        }
+        .inline-flex {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        /* ─── NOTIFICATION DOT ─── */
+        .notif-dot {
+            display: inline-block;
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: var(--danger);
+            margin-left: 4px;
+            animation: pulse 1.5s infinite;
+        }
+        @keyframes pulse {
+            0%,
+            100% {
+                opacity: 1;
+                transform: scale(1);
+            }
+            50% {
+                opacity: 0.5;
+                transform: scale(1.3);
+            }
+        }
+
+        /* ─── RATING ─── */
+        .rating-display {
+            display: inline-flex;
+            gap: 3px;
+            font-size: 18px;
+        }
+        .rating-display span {
+            color: #f59f00;
+        }
+        .rating-display span.empty {
+            color: var(--gray);
         }
     </style>
 </head>
 
 <body>
 
-    <!-- AUTH SCREEN -->
-
+    <!-- ════════════════════ AUTH SCREEN ════════════════════ -->
     <div id="authScreen" class="auth-screen">
         <div class="auth-box">
-
             <div class="logo">
                 <div class="logo-icon">🥛</div>
-                <h1>Khodaamba Milk Dairy</h1>
-                <p>Fresh Milk • Fresh Life</p>
+                <h1 data-lang="appName">Khodaamba Milk Dairy</h1>
+                <p data-lang="tagline">Fresh Milk • Fresh Life</p>
             </div>
-
             <div class="auth-tabs">
-                <button id="loginTab" class="active" onclick="showLogin()">Login</button>
-                <button id="registerTab" onclick="showRegister()">Register</button>
+                <button id="loginTab" class="active" onclick="showLogin()" data-lang="login">Login</button>
+                <button id="registerTab" onclick="showRegister()" data-lang="register">Register</button>
             </div>
-
             <div id="loginForm">
-
                 <div class="form-group">
-                    <label>Email</label>
-                    <input id="loginEmail" type="email" placeholder="Enter email">
+                    <label data-lang="email">Email</label>
+                    <input id="loginEmail" type="email" placeholder="Enter email" data-lang-placeholder="enterEmail">
                 </div>
-
                 <div class="form-group">
-                    <label>Password</label>
-                    <input id="loginPassword" type="password" placeholder="Enter password">
+                    <label data-lang="password">Password</label>
+                    <input id="loginPassword" type="password" placeholder="Enter password" data-lang-placeholder="enterPassword">
                 </div>
-
-                <button class="primary-btn" onclick="loginUser()">Login</button>
-
+                <button class="primary-btn" onclick="loginUser()" data-lang="loginBtn">Login</button>
             </div>
-
             <div id="registerForm" class="hidden">
-
                 <div class="form-group">
-                    <label>Full Name</label>
-                    <input id="regName" type="text" placeholder="Enter your name">
+                    <label data-lang="fullName">Full Name</label>
+                    <input id="regName" type="text" placeholder="Enter your name" data-lang-placeholder="enterName">
                 </div>
-
                 <div class="form-group">
-                    <label>Mobile</label>
-                    <input id="regPhone" type="tel" placeholder="Enter mobile number">
+                    <label data-lang="mobile">Mobile</label>
+                    <input id="regPhone" type="tel" placeholder="Enter mobile number" data-lang-placeholder="enterMobile">
                 </div>
-
                 <div class="form-group">
-                    <label>Email</label>
-                    <input id="regEmail" type="email" placeholder="Enter email">
+                    <label data-lang="email">Email</label>
+                    <input id="regEmail" type="email" placeholder="Enter email" data-lang-placeholder="enterEmail">
                 </div>
-
                 <div class="form-group">
-                    <label>Password</label>
-                    <input id="regPassword" type="password" placeholder="Minimum 6 characters">
+                    <label data-lang="password">Password</label>
+                    <input id="regPassword" type="password" placeholder="Minimum 6 characters" data-lang-placeholder="min6Chars">
                 </div>
-
                 <div class="form-group">
-                    <label>Address</label>
-                    <input id="regAddress" type="text" placeholder="Delivery address">
+                    <label data-lang="address">Address</label>
+                    <input id="regAddress" type="text" placeholder="Delivery address" data-lang-placeholder="enterAddress">
                 </div>
-
-                <button class="primary-btn" onclick="registerUser()">Create Account</button>
-
+                <button class="primary-btn" onclick="registerUser()" data-lang="createAccount">Create Account</button>
             </div>
-
             <div id="authMessage" class="auth-message"></div>
-
         </div>
     </div>
 
-
-    <!-- MAIN APPLICATION -->
-
+    <!-- ════════════════════ MAIN APP ════════════════════ -->
     <div id="app" class="app hidden">
 
+        <!-- NAVBAR -->
         <div class="navbar">
-
             <div class="nav-brand">
                 <button class="mobile-menu" onclick="toggleSidebar()">☰</button>
-
                 <div class="mini-logo">🥛</div>
-
-                <h2>Khodaamba Milk Dairy</h2>
+                <h2 data-lang="appName">Khodaamba Milk Dairy</h2>
             </div>
-
             <div class="nav-right">
                 <span id="navUser" class="user-name"></span>
-                <button class="logout-btn" onclick="logoutUser()">Logout</button>
+                <button class="theme-btn" onclick="toggleTheme()" title="Toggle Theme">🌓</button>
+                <button class="lang-btn" onclick="toggleLanguage()"><span>🌐</span> <span id="langLabel">EN</span></button>
+                <button class="logout-btn" onclick="logoutUser()" data-lang="logout">Logout</button>
             </div>
-
         </div>
 
         <div class="layout">
 
+            <!-- SIDEBAR -->
             <aside id="sidebar" class="sidebar">
-
-                <button id="dashboardNav" class="active" onclick="openPage('dashboard')">
-                    🏠 Dashboard
-                </button>
-
-                <button onclick="openPage('subscription')">
-                    🥛 My Subscription
-                </button>
-
-                <button onclick="openPage('billing')">
-                    💰 My Bills
-                </button>
-
-                <button onclick="openPage('delivery')">
-                    🚚 Delivery
-                </button>
-
-                <button onclick="openPage('profile')">
-                    👤 Profile
-                </button>
-
-                <button id="adminNav" class="hidden" onclick="openPage('admin')">
-                    ⚙️ Admin Panel
-                </button>
-
+                <div class="nav-label" data-lang="mainMenu">Main Menu</div>
+                <button id="dashboardNav" class="active" onclick="openPage('dashboard')">🏠 <span data-lang="dashboard">Dashboard</span></button>
+                <button onclick="openPage('subscription')">🥛 <span data-lang="mySubscription">My Subscription</span></button>
+                <button onclick="openPage('billing')">💰 <span data-lang="myBills">My Bills</span></button>
+                <button onclick="openPage('delivery')">🚚 <span data-lang="delivery">Delivery</span></button>
+                <button onclick="openPage('history')">📋 <span data-lang="orderHistory">Order History</span></button>
+                <button onclick="openPage('feedback')">⭐ <span data-lang="feedback">Feedback</span></button>
+                <button onclick="openPage('profile')">👤 <span data-lang="profile">Profile</span></button>
+                <div class="nav-label" style="margin-top:15px;" data-lang="admin">Admin</div>
+                <button id="adminNav" class="hidden" onclick="openPage('admin')">⚙️ <span data-lang="adminPanel">Admin Panel</span></button>
             </aside>
 
+            <!-- CONTENT -->
             <main class="content">
 
-                <!-- DASHBOARD -->
-
+                <!-- ═══ DASHBOARD ═══ -->
                 <section id="dashboardPage">
-
                     <div class="page-title">
-                        <h1 id="welcomeTitle">Dashboard</h1>
-                        <p>Manage your milk subscription easily.</p>
+                        <h1 id="welcomeTitle" data-lang="welcomeDashboard">Dashboard</h1>
+                        <p data-lang="dashboardSub">Manage your milk subscription easily.</p>
                     </div>
-
                     <div class="stats">
-
                         <div class="stat-card">
                             <div class="icon">🥛</div>
                             <h3 id="dashMilk">0 L</h3>
-                            <p>Daily Milk</p>
+                            <p data-lang="dailyMilk">Daily Milk</p>
                         </div>
-
                         <div class="stat-card">
                             <div class="icon">📅</div>
                             <h3 id="dashDays">0</h3>
-                            <p>Delivery Days</p>
+                            <p data-lang="deliveryDays">Delivery Days</p>
                         </div>
-
                         <div class="stat-card">
                             <div class="icon">💰</div>
                             <h3 id="dashBill">₹0</h3>
-                            <p>Estimated Monthly Bill</p>
+                            <p data-lang="estMonthlyBill">Estimated Monthly Bill</p>
                         </div>
-
                         <div class="stat-card">
                             <div class="icon">🚚</div>
                             <h3 id="dashDelivery">Pending</h3>
-                            <p>Today's Delivery</p>
+                            <p data-lang="todaysDelivery">Today's Delivery</p>
                         </div>
-
                     </div>
-
                     <div class="grid">
-
                         <div class="card">
-                            <h2>Current Subscription</h2>
-
-                            <div id="currentSubscription">
-                                No active subscription.
-                            </div>
-
+                            <h2 data-lang="currentSubscription">Current Subscription</h2>
+                            <div id="currentSubscription"><p data-lang="noActiveSub">No active subscription.</p></div>
                         </div>
-
                         <div class="card">
-
-                            <h2>Quick Actions</h2>
-
-                            <button class="primary-btn" onclick="openPage('subscription')">
-                                Manage Subscription
-                            </button>
-
+                            <h2 data-lang="quickActions">Quick Actions</h2>
+                            <button class="primary-btn" onclick="openPage('subscription')" data-lang="manageSub">Manage Subscription</button>
                             <br><br>
-
-                            <button class="primary-btn" onclick="openPage('billing')">
-                                View Monthly Bill
-                            </button>
-
+                            <button class="primary-btn" onclick="openPage('billing')" data-lang="viewBill">View Monthly Bill</button>
+                            <br><br>
+                            <button class="primary-btn" onclick="openPage('feedback')" data-lang="giveFeedback">Give Feedback</button>
                         </div>
-
                     </div>
-
                 </section>
 
-
-                <!-- SUBSCRIPTION -->
-
+                <!-- ═══ SUBSCRIPTION ═══ -->
                 <section id="subscriptionPage" class="hidden">
-
                     <div class="page-title">
-                        <h1>My Subscription</h1>
-                        <p>Choose your milk and daily quantity.</p>
+                        <h1 data-lang="mySubscription">My Subscription</h1>
+                        <p data-lang="subDesc">Choose your milk and daily quantity.</p>
                     </div>
-
                     <div class="card">
-
-                        <h2>Milk Type</h2>
-
+                        <h2 data-lang="milkType">Milk Type</h2>
                         <div class="product-grid">
-
                             <div id="cowOption" class="product-option selected" onclick="selectMilk('Cow')">
-
-                                <h3>🐄 Cow Milk</h3>
-                                <p>Fresh cow milk</p>
+                                <h3>🐄 <span data-lang="cowMilk">Cow Milk</span></h3>
+                                <p data-lang="cowDesc">Fresh cow milk</p>
                                 <strong id="cowRateText">₹60 / L</strong>
-
                             </div>
-
                             <div id="buffaloOption" class="product-option" onclick="selectMilk('Buffalo')">
-
-                                <h3>🐃 Buffalo Milk</h3>
-                                <p>Fresh buffalo milk</p>
+                                <h3>🐃 <span data-lang="buffaloMilk">Buffalo Milk</span></h3>
+                                <p data-lang="buffaloDesc">Fresh buffalo milk</p>
                                 <strong id="buffaloRateText">₹70 / L</strong>
-
                             </div>
-
                         </div>
-
                         <br>
-
                         <div class="form-group">
-                            <label>Daily Quantity (Litres)</label>
-
+                            <label data-lang="dailyQty">Daily Quantity (Litres)</label>
                             <select id="quantity">
                                 <option value="0.5">0.5 L</option>
                                 <option value="1">1 L</option>
@@ -789,266 +884,243 @@
                                 <option value="5">5 L</option>
                             </select>
                         </div>
-
                         <div class="form-group">
-                            <label>Delivery Days</label>
-
+                            <label data-lang="deliveryDaysLabel">Delivery Days</label>
                             <select id="deliveryDays">
-                                <option value="7">7 Days</option>
-                                <option value="15">15 Days</option>
-                                <option value="30" selected>30 Days</option>
+                                <option value="7" data-lang="days7">7 Days</option>
+                                <option value="15" data-lang="days15">15 Days</option>
+                                <option value="30" selected data-lang="days30">30 Days</option>
                             </select>
                         </div>
-
                         <div class="bill">
-
-                            <h3>Estimated Bill</h3>
-
-                            <p>Daily: <strong id="previewDaily">₹60</strong></p>
-
-                            <p>Monthly/Selected Period:</p>
-
-                            <div id="previewTotal" class="bill-total">
-                                ₹1800
-                            </div>
-
+                            <h3 data-lang="estimatedBill">Estimated Bill</h3>
+                            <p><span data-lang="dailyLabel">Daily</span>: <strong id="previewDaily">₹60</strong></p>
+                            <p><span data-lang="periodLabel">Monthly/Selected Period</span>:</p>
+                            <div id="previewTotal" class="bill-total">₹1800</div>
                         </div>
-
                         <br>
-
-                        <button class="primary-btn" onclick="saveSubscription()">
-                            Save Subscription
-                        </button>
-
+                        <button class="primary-btn" onclick="saveSubscription()" data-lang="saveSub">Save Subscription</button>
                     </div>
-
                 </section>
 
-
-                <!-- BILLING -->
-
+                <!-- ═══ BILLING ═══ -->
                 <section id="billingPage" class="hidden">
-
                     <div class="page-title">
-                        <h1>My Bills</h1>
-                        <p>Automatically calculated milk bills.</p>
+                        <h1 data-lang="myBills">My Bills</h1>
+                        <p data-lang="billsDesc">Automatically calculated milk bills.</p>
                     </div>
-
                     <div class="card">
-
-                        <h2>Current Bill</h2>
-
-                        <div id="customerBill">
-                            Loading...
-                        </div>
-
+                        <h2 data-lang="currentBill">Current Bill</h2>
+                        <div id="customerBill">Loading...</div>
                     </div>
-
                     <div class="card">
-
-                        <h2>Billing Information</h2>
-
+                        <h2 data-lang="billingInfo">Billing Information</h2>
                         <div class="info-row">
-                            <span>Billing Cycle</span>
-                            <strong>Monthly</strong>
+                            <span data-lang="billingCycle">Billing Cycle</span>
+                            <strong data-lang="monthly">Monthly</strong>
                         </div>
-
                         <div class="info-row">
-                            <span>Payment Status</span>
-                            <span id="customerPaymentStatus" class="badge orange">
-                                Pending
-                            </span>
+                            <span data-lang="paymentStatus">Payment Status</span>
+                            <span id="customerPaymentStatus" class="badge orange" data-lang="pending">Pending</span>
                         </div>
-
+                        <div class="info-row">
+                            <span data-lang="dueDate">Due Date</span>
+                            <strong id="dueDateDisplay">-</strong>
+                        </div>
                     </div>
-
+                    <button class="primary-btn" onclick="exportBill()" style="max-width:250px;" data-lang="exportBill">📄 Export Bill</button>
                 </section>
 
-
-                <!-- DELIVERY -->
-
+                <!-- ═══ DELIVERY ═══ -->
                 <section id="deliveryPage" class="hidden">
-
                     <div class="page-title">
-                        <h1>Delivery Tracking</h1>
-                        <p>Check your milk delivery status.</p>
+                        <h1 data-lang="deliveryTracking">Delivery Tracking</h1>
+                        <p data-lang="deliveryDesc">Check your milk delivery status.</p>
                     </div>
-
                     <div class="card">
-
-                        <h2>Today's Delivery</h2>
-
+                        <h2 data-lang="todaysDelivery">Today's Delivery</h2>
                         <div id="deliveryStatusBox">
-
                             <div class="info-row">
-                                <span>Milk</span>
+                                <span data-lang="milk">Milk</span>
                                 <strong id="deliveryMilk">-</strong>
                             </div>
-
                             <div class="info-row">
-                                <span>Quantity</span>
+                                <span data-lang="quantity">Quantity</span>
                                 <strong id="deliveryQuantity">-</strong>
                             </div>
-
                             <div class="info-row">
-                                <span>Status</span>
-                                <span id="deliveryStatus" class="badge orange">
-                                    Pending
-                                </span>
+                                <span data-lang="status">Status</span>
+                                <span id="deliveryStatus" class="badge orange" data-lang="pending">Pending</span>
                             </div>
-
+                            <div class="info-row">
+                                <span data-lang="deliveryDate">Delivery Date</span>
+                                <strong id="deliveryDateDisplay">-</strong>
+                            </div>
                         </div>
-
                     </div>
-
+                    <div class="card">
+                        <h2 data-lang="deliveryHistory">Delivery History</h2>
+                        <div id="deliveryHistoryList"><p class="text-muted" data-lang="noDeliveryHistory">No delivery history yet.</p></div>
+                    </div>
                 </section>
 
-
-                <!-- PROFILE -->
-
-                <section id="profilePage" class="hidden">
-
+                <!-- ═══ ORDER HISTORY ═══ -->
+                <section id="historyPage" class="hidden">
                     <div class="page-title">
-                        <h1>My Profile</h1>
-                        <p>Manage your account information.</p>
+                        <h1 data-lang="orderHistory">Order History</h1>
+                        <p data-lang="historyDesc">View all your past orders and subscriptions.</p>
                     </div>
-
                     <div class="card">
+                        <div class="table-wrap">
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th data-lang="date">Date</th>
+                                        <th data-lang="milk">Milk</th>
+                                        <th data-lang="quantity">Quantity</th>
+                                        <th data-lang="days">Days</th>
+                                        <th data-lang="amount">Amount</th>
+                                        <th data-lang="status">Status</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="orderHistoryTable">
+                                    <tr><td colspan="6" class="text-center text-muted" data-lang="noOrders">No orders yet.</td></tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </section>
 
+                <!-- ═══ FEEDBACK ═══ -->
+                <section id="feedbackPage" class="hidden">
+                    <div class="page-title">
+                        <h1 data-lang="feedback">Feedback</h1>
+                        <p data-lang="feedbackDesc">Share your experience with us.</p>
+                    </div>
+                    <div class="card">
+                        <h2 data-lang="rateUs">Rate Us</h2>
+                        <div class="stars" id="starRating">
+                            <span data-value="1">☆</span>
+                            <span data-value="2">☆</span>
+                            <span data-value="3">☆</span>
+                            <span data-value="4">☆</span>
+                            <span data-value="5">☆</span>
+                        </div>
+                        <br>
                         <div class="form-group">
-                            <label>Name</label>
+                            <label data-lang="yourFeedback">Your Feedback</label>
+                            <textarea id="feedbackText" rows="4" placeholder="Write your feedback..." data-lang-placeholder="writeFeedback"></textarea>
+                        </div>
+                        <button class="primary-btn" onclick="submitFeedback()" data-lang="submitFeedback">Submit Feedback</button>
+                    </div>
+                    <div class="card">
+                        <h2 data-lang="yourRatings">Your Ratings</h2>
+                        <div id="userFeedbackList"><p class="text-muted" data-lang="noFeedback">No feedback yet.</p></div>
+                    </div>
+                </section>
+
+                <!-- ═══ PROFILE ═══ -->
+                <section id="profilePage" class="hidden">
+                    <div class="page-title">
+                        <h1 data-lang="profile">My Profile</h1>
+                        <p data-lang="profileDesc">Manage your account information.</p>
+                    </div>
+                    <div class="card">
+                        <div class="form-group">
+                            <label data-lang="fullName">Name</label>
                             <input id="profileName">
                         </div>
-
                         <div class="form-group">
-                            <label>Mobile</label>
+                            <label data-lang="mobile">Mobile</label>
                             <input id="profilePhone">
                         </div>
-
                         <div class="form-group">
-                            <label>Address</label>
+                            <label data-lang="address">Address</label>
                             <input id="profileAddress">
                         </div>
-
-                        <button class="primary-btn" onclick="updateProfile()">
-                            Update Profile
-                        </button>
-
+                        <button class="primary-btn" onclick="updateProfile()" data-lang="updateProfile">Update Profile</button>
                     </div>
-
                 </section>
 
-
-                <!-- ADMIN -->
-
+                <!-- ═══ ADMIN ═══ -->
                 <section id="adminPage" class="hidden">
-
                     <div class="page-title">
-                        <h1>Admin Dashboard</h1>
-                        <p>Manage Khodaamba Milk Dairy.</p>
+                        <h1 data-lang="adminPanel">Admin Dashboard</h1>
+                        <p data-lang="adminDesc">Manage Khodaamba Milk Dairy.</p>
                     </div>
-
                     <div class="stats">
-
                         <div class="stat-card">
                             <div class="icon">👥</div>
                             <h3 id="adminCustomers">0</h3>
-                            <p>Total Customers</p>
+                            <p data-lang="totalCustomers">Total Customers</p>
                         </div>
-
                         <div class="stat-card">
                             <div class="icon">🥛</div>
                             <h3 id="adminLitres">0 L</h3>
-                            <p>Total Daily Milk</p>
+                            <p data-lang="totalDailyMilk">Total Daily Milk</p>
                         </div>
-
                         <div class="stat-card">
                             <div class="icon">💰</div>
                             <h3 id="adminRevenue">₹0</h3>
-                            <p>Estimated Revenue</p>
+                            <p data-lang="estimatedRevenue">Estimated Revenue</p>
                         </div>
-
                         <div class="stat-card">
                             <div class="icon">🚚</div>
                             <h3 id="adminDeliveries">0</h3>
-                            <p>Active Deliveries</p>
+                            <p data-lang="activeDeliveries">Active Deliveries</p>
                         </div>
-
                     </div>
-
-
                     <div class="card">
-
-                        <h2>Milk Rates</h2>
-
+                        <h2 data-lang="milkRates">Milk Rates</h2>
                         <div class="grid">
-
                             <div class="form-group">
-                                <label>Cow Milk Rate / Litre</label>
+                                <label data-lang="cowRate">Cow Milk Rate / Litre</label>
                                 <input id="cowRate" type="number">
                             </div>
-
                             <div class="form-group">
-                                <label>Buffalo Milk Rate / Litre</label>
+                                <label data-lang="buffaloRate">Buffalo Milk Rate / Litre</label>
                                 <input id="buffaloRate" type="number">
                             </div>
-
                         </div>
-
-                        <button class="primary-btn" onclick="updateRates()">
-                            Update Milk Rates
-                        </button>
-
+                        <button class="primary-btn" onclick="updateRates()" data-lang="updateRates">Update Milk Rates</button>
                     </div>
-
-
                     <div class="card">
-
-                        <h2>Customer Management</h2>
-
+                        <h2 data-lang="customerManagement">Customer Management</h2>
                         <div class="form-group">
-                            <input id="customerSearch" placeholder="Search customer..." oninput="filterCustomers()">
+                            <input id="customerSearch" placeholder="Search customer..." oninput="filterCustomers()" data-lang-placeholder="searchCustomer">
                         </div>
-
                         <div class="table-wrap">
-
                             <table>
-
                                 <thead>
                                     <tr>
-                                        <th>Name</th>
-                                        <th>Mobile</th>
-                                        <th>Milk</th>
-                                        <th>Quantity</th>
-                                        <th>Days</th>
-                                        <th>Bill</th>
-                                        <th>Payment</th>
-                                        <th>Delivery</th>
+                                        <th data-lang="name">Name</th>
+                                        <th data-lang="mobile">Mobile</th>
+                                        <th data-lang="milk">Milk</th>
+                                        <th data-lang="quantity">Quantity</th>
+                                        <th data-lang="days">Days</th>
+                                        <th data-lang="bill">Bill</th>
+                                        <th data-lang="payment">Payment</th>
+                                        <th data-lang="delivery">Delivery</th>
                                     </tr>
                                 </thead>
-
                                 <tbody id="customersTable"></tbody>
-
                             </table>
-
                         </div>
-
                     </div>
-
                 </section>
 
             </main>
-
         </div>
-
     </div>
 
+    <!-- TOAST -->
     <div id="toast" class="toast"></div>
 
 
+    <!-- ════════════════════ JAVASCRIPT ════════════════════ -->
     <script type="module">
+        // ─── IMPORTS ───
         import { initializeApp } from "https://www.gstatic.com/firebasejs/12.18.0/firebase-app.js";
-
         import {
             getAuth,
             createUserWithEmailAndPassword,
@@ -1056,7 +1128,6 @@
             signOut,
             onAuthStateChanged
         } from "https://www.gstatic.com/firebasejs/12.18.0/firebase-auth.js";
-
         import {
             getFirestore,
             doc,
@@ -1065,16 +1136,16 @@
             updateDoc,
             collection,
             getDocs,
+            serverTimestamp,
+            addDoc,
             query,
+            orderBy,
+            limit,
             where,
-            serverTimestamp
+            deleteDoc
         } from "https://www.gstatic.com/firebasejs/12.18.0/firebase-firestore.js";
 
-
-        /* =====================================================
-           FIREBASE CONFIG – Updated with your credentials
-           ===================================================== */
-
+        // ─── FIREBASE CONFIG ───
         const firebaseConfig = {
             apiKey: "AIzaSyBAxkov7Yazas1RMtHbH1D5KiytmTIePUE",
             authDomain: "khodaambadairy.firebaseapp.com",
@@ -1082,115 +1153,597 @@
             storageBucket: "khodaambadairy.firebasestorage.app",
             messagingSenderId: "806677132863",
             appId: "1:806677132863:web:17e6c30e2a1630102c2a8a",
-            measurementId: "G-RJ8J919VZ4" // optional, kept for reference
+            measurementId: "G-RJ8J919VZ4"
         };
-
-
-        /* =====================================================
-           INITIALIZE FIREBASE
-           ===================================================== */
 
         const app = initializeApp(firebaseConfig);
         const auth = getAuth(app);
         const db = getFirestore(app);
 
-
-        /* =====================================================
-           SETTINGS
-           ===================================================== */
-
+        // ─── STATE ───
         let currentUser = null;
         let currentCustomer = null;
         let selectedMilk = "Cow";
-        let rates = {
-            Cow: 60,
-            Buffalo: 70
-        };
+        let rates = { Cow: 60, Buffalo: 70 };
+        let currentLang = 'en';
+        let currentTheme = 'light';
+        let allCustomers = [];
 
-        /*
-           IMPORTANT:
-           Is email ko apne actual admin email se replace karo.
-           Example: admin@khodaambamilk.com
-        */
         const ADMIN_EMAIL = "admin@khodaambamilk.com";
 
+        // ─── TRANSLATIONS ───
+        const translations = {
+            en: {
+                appName: "Khodaamba Milk Dairy",
+                tagline: "Fresh Milk • Fresh Life",
+                login: "Login",
+                register: "Register",
+                email: "Email",
+                password: "Password",
+                enterEmail: "Enter email",
+                enterPassword: "Enter password",
+                loginBtn: "Login",
+                fullName: "Full Name",
+                mobile: "Mobile",
+                enterName: "Enter your name",
+                enterMobile: "Enter mobile number",
+                min6Chars: "Minimum 6 characters",
+                address: "Address",
+                enterAddress: "Delivery address",
+                createAccount: "Create Account",
+                logout: "Logout",
+                dashboard: "Dashboard",
+                mySubscription: "My Subscription",
+                myBills: "My Bills",
+                delivery: "Delivery",
+                orderHistory: "Order History",
+                feedback: "Feedback",
+                profile: "Profile",
+                adminPanel: "Admin Panel",
+                admin: "Admin",
+                mainMenu: "Main Menu",
+                welcomeDashboard: "Dashboard",
+                dashboardSub: "Manage your milk subscription easily.",
+                dailyMilk: "Daily Milk",
+                deliveryDays: "Delivery Days",
+                estMonthlyBill: "Estimated Monthly Bill",
+                todaysDelivery: "Today's Delivery",
+                currentSubscription: "Current Subscription",
+                noActiveSub: "No active subscription.",
+                quickActions: "Quick Actions",
+                manageSub: "Manage Subscription",
+                viewBill: "View Monthly Bill",
+                giveFeedback: "Give Feedback",
+                subDesc: "Choose your milk and daily quantity.",
+                milkType: "Milk Type",
+                cowMilk: "Cow Milk",
+                cowDesc: "Fresh cow milk",
+                buffaloMilk: "Buffalo Milk",
+                buffaloDesc: "Fresh buffalo milk",
+                dailyQty: "Daily Quantity (Litres)",
+                deliveryDaysLabel: "Delivery Days",
+                days7: "7 Days",
+                days15: "15 Days",
+                days30: "30 Days",
+                estimatedBill: "Estimated Bill",
+                dailyLabel: "Daily",
+                periodLabel: "Monthly/Selected Period",
+                saveSub: "Save Subscription",
+                billsDesc: "Automatically calculated milk bills.",
+                currentBill: "Current Bill",
+                billingInfo: "Billing Information",
+                billingCycle: "Billing Cycle",
+                monthly: "Monthly",
+                paymentStatus: "Payment Status",
+                pending: "Pending",
+                paid: "Paid",
+                dueDate: "Due Date",
+                exportBill: "📄 Export Bill",
+                deliveryTracking: "Delivery Tracking",
+                deliveryDesc: "Check your milk delivery status.",
+                milk: "Milk",
+                quantity: "Quantity",
+                status: "Status",
+                deliveryDate: "Delivery Date",
+                deliveryHistory: "Delivery History",
+                noDeliveryHistory: "No delivery history yet.",
+                historyDesc: "View all your past orders and subscriptions.",
+                date: "Date",
+                days: "Days",
+                amount: "Amount",
+                noOrders: "No orders yet.",
+                rateUs: "Rate Us",
+                yourFeedback: "Your Feedback",
+                writeFeedback: "Write your feedback...",
+                submitFeedback: "Submit Feedback",
+                yourRatings: "Your Ratings",
+                noFeedback: "No feedback yet.",
+                profileDesc: "Manage your account information.",
+                updateProfile: "Update Profile",
+                adminDesc: "Manage Khodaamba Milk Dairy.",
+                totalCustomers: "Total Customers",
+                totalDailyMilk: "Total Daily Milk",
+                estimatedRevenue: "Estimated Revenue",
+                activeDeliveries: "Active Deliveries",
+                milkRates: "Milk Rates",
+                cowRate: "Cow Milk Rate / Litre",
+                buffaloRate: "Buffalo Milk Rate / Litre",
+                updateRates: "Update Milk Rates",
+                customerManagement: "Customer Management",
+                searchCustomer: "Search customer...",
+                name: "Name",
+                bill: "Bill",
+                payment: "Payment",
+                delivery: "Delivery",
+                noData: "No data",
+                subscriptionSaved: "Subscription saved successfully.",
+                profileUpdated: "Profile updated successfully.",
+                ratesUpdated: "Milk rates updated.",
+                feedbackSubmitted: "Thank you for your feedback!",
+                loggedOut: "Logged out.",
+                welcome: "Welcome",
+                customer: "Customer",
+                loading: "Loading...",
+                order: "Order",
+                delivered: "Delivered",
+                outForDelivery: "Out for Delivery",
+                pendingStatus: "Pending",
+                statusUpdated: "Status updated",
+                paymentUpdated: "Payment updated",
+                billExported: "Bill exported!",
+                darkMode: "Dark Mode",
+                lightMode: "Light Mode",
+                gujarati: "Gujarati",
+                english: "English",
+                selectLanguage: "Select Language",
+                today: "Today",
+                month: "Month",
+                year: "Year",
+                total: "Total",
+                from: "From",
+                to: "To",
+                filter: "Filter",
+                reset: "Reset",
+                apply: "Apply",
+                cancel: "Cancel",
+                save: "Save",
+                delete: "Delete",
+                edit: "Edit",
+                view: "View",
+                back: "Back",
+                next: "Next",
+                previous: "Previous",
+                confirm: "Confirm",
+                areYouSure: "Are you sure?",
+                yes: "Yes",
+                no: "No",
+                success: "Success",
+                error: "Error",
+                warning: "Warning",
+                info: "Info",
+                pleaseWait: "Please wait...",
+                processing: "Processing...",
+                done: "Done",
+                failed: "Failed",
+                retry: "Retry",
+                close: "Close",
+                open: "Open",
+                more: "More",
+                less: "Less",
+                all: "All",
+                none: "None",
+                some: "Some",
+                any: "Any",
+                between: "Between",
+                and: "And",
+                or: "Or",
+                with: "With",
+                without: "Without",
+                including: "Including",
+                excluding: "Excluding",
+                only: "Only",
+                also: "Also",
+                too: "Too",
+                very: "Very",
+                quite: "Quite",
+                rather: "Rather",
+                fairly: "Fairly",
+                extremely: "Extremely",
+                absolutely: "Absolutely",
+                completely: "Completely",
+                totally: "Totally",
+                utterly: "Utterly",
+                highly: "Highly",
+                deeply: "Deeply",
+                strongly: "Strongly",
+                really: "Really",
+                truly: "Truly",
+                indeed: "Indeed",
+                certainly: "Certainly",
+                definitely: "Definitely",
+                surely: "Surely",
+                probably: "Probably",
+                possibly: "Possibly",
+                perhaps: "Perhaps",
+                maybe: "Maybe",
+                might: "Might",
+                could: "Could",
+                would: "Would",
+                should: "Should",
+                must: "Must",
+                shall: "Shall",
+                will: "Will",
+                may: "May",
+                can: "Can",
+                do: "Do",
+                does: "Does",
+                did: "Did",
+                done: "Done",
+                doing: "Doing",
+                go: "Go",
+                goes: "Goes",
+                went: "Went",
+                gone: "Gone",
+                going: "Going",
+                make: "Make",
+                makes: "Makes",
+                made: "Made",
+                making: "Making",
+                have: "Have",
+                has: "Has",
+                had: "Had",
+                having: "Having",
+                be: "Be",
+                being: "Being",
+                been: "Been",
+                am: "Am",
+                is: "Is",
+                are: "Are",
+                was: "Was",
+                were: "Were",
+                // Admin specific
+                noCustomers: "No customers found.",
+                customerDeleted: "Customer deleted.",
+                confirmDelete: "Are you sure you want to delete this customer?",
+            },
+            gu: {
+                appName: "ખોડાંબા મિલ્ક ડેરી",
+                tagline: "તાજું દૂધ • તાજું જીવન",
+                login: "લૉગિન",
+                register: "નોંધણી",
+                email: "ઈમેલ",
+                password: "પાસવર્ડ",
+                enterEmail: "ઈમેલ દાખલ કરો",
+                enterPassword: "પાસવર્ડ દાખલ કરો",
+                loginBtn: "લૉગિન",
+                fullName: "પૂરું નામ",
+                mobile: "મોબાઈલ",
+                enterName: "તમારું નામ દાખલ કરો",
+                enterMobile: "મોબાઈલ નંબર દાખલ કરો",
+                min6Chars: "ઓછામાં ઓછા 6 અક્ષરો",
+                address: "સરનામું",
+                enterAddress: "ડિલિવરી સરનામું",
+                createAccount: "ખાતું બનાવો",
+                logout: "લૉગઆઉટ",
+                dashboard: "ડેશબોર્ડ",
+                mySubscription: "મારી સબ્સ્ક્રિપ્શન",
+                myBills: "મારા બિલ",
+                delivery: "ડિલિવરી",
+                orderHistory: "ઓર્ડર ઇતિહાસ",
+                feedback: "પ્રતિસાદ",
+                profile: "પ્રોફાઇલ",
+                adminPanel: "એડમિન પેનલ",
+                admin: "એડમિન",
+                mainMenu: "મુખ્ય મેનૂ",
+                welcomeDashboard: "ડેશબોર્ડ",
+                dashboardSub: "તમારી દૂધ સબ્સ્ક્રિપ્શન સરળતાથી મેનેજ કરો.",
+                dailyMilk: "દૈનિક દૂધ",
+                deliveryDays: "ડિલિવરી દિવસો",
+                estMonthlyBill: "અંદાજિત માસિક બિલ",
+                todaysDelivery: "આજની ડિલિવરી",
+                currentSubscription: "વર્તમાન સબ્સ્ક્રિપ્શન",
+                noActiveSub: "કોઈ સક્રિય સબ્સ્ક્રિપ્શન નથી.",
+                quickActions: "ઝડપી ક્રિયાઓ",
+                manageSub: "સબ્સ્ક્રિપ્શન મેનેજ કરો",
+                viewBill: "માસિક બિલ જુઓ",
+                giveFeedback: "પ્રતિસાદ આપો",
+                subDesc: "તમારું દૂધ અને દૈનિક જથ્થો પસંદ કરો.",
+                milkType: "દૂધનો પ્રકાર",
+                cowMilk: "ગાયનું દૂધ",
+                cowDesc: "તાજું ગાયનું દૂધ",
+                buffaloMilk: "ભેંસનું દૂધ",
+                buffaloDesc: "તાજું ભેંસનું દૂધ",
+                dailyQty: "દૈનિક જથ્થો (લિટર)",
+                deliveryDaysLabel: "ડિલિવરી દિવસો",
+                days7: "૭ દિવસ",
+                days15: "૧૫ દિવસ",
+                days30: "૩૦ દિવસ",
+                estimatedBill: "અંદાજિત બિલ",
+                dailyLabel: "દૈનિક",
+                periodLabel: "માસિક/પસંદ કરેલ સમયગાળો",
+                saveSub: "સબ્સ્ક્રિપ્શન સેવ કરો",
+                billsDesc: "આપમેળે ગણતરી કરેલ દૂધ બિલ.",
+                currentBill: "વર્તમાન બિલ",
+                billingInfo: "બિલિંગ માહિતી",
+                billingCycle: "બિલિંગ સાયકલ",
+                monthly: "માસિક",
+                paymentStatus: "ચુકવણી સ્થિતિ",
+                pending: "બાકી",
+                paid: "ચૂકવેલ",
+                dueDate: "અંતિમ તારીખ",
+                exportBill: "📄 બિલ નિકાસ કરો",
+                deliveryTracking: "ડિલિવરી ટ્રેકિંગ",
+                deliveryDesc: "તમારી દૂધ ડિલિવરી સ્થિતિ તપાસો.",
+                milk: "દૂધ",
+                quantity: "જથ્થો",
+                status: "સ્થિતિ",
+                deliveryDate: "ડિલિવરી તારીખ",
+                deliveryHistory: "ડિલિવરી ઇતિહાસ",
+                noDeliveryHistory: "હજુ સુધી કોઈ ડિલિવરી ઇતિહાસ નથી.",
+                historyDesc: "તમારા તમામ ભૂતપૂર્વ ઓર્ડર અને સબ્સ્ક્રિપ્શનો જુઓ.",
+                date: "તારીખ",
+                days: "દિવસો",
+                amount: "રકમ",
+                noOrders: "હજુ સુધી કોઈ ઓર્ડર નથી.",
+                rateUs: "અમને રેટ કરો",
+                yourFeedback: "તમારો પ્રતિસાદ",
+                writeFeedback: "તમારો પ્રતિસાદ લખો...",
+                submitFeedback: "પ્રતિસાદ સબમિટ કરો",
+                yourRatings: "તમારા રેટિંગ્સ",
+                noFeedback: "હજુ સુધી કોઈ પ્રતિસાદ નથી.",
+                profileDesc: "તમારી ખાતાની માહિતી મેનેજ કરો.",
+                updateProfile: "પ્રોફાઇલ અપડેટ કરો",
+                adminDesc: "ખોડાંબા મિલ્ક ડેરી મેનેજ કરો.",
+                totalCustomers: "કુલ ગ્રાહકો",
+                totalDailyMilk: "કુલ દૈનિક દૂધ",
+                estimatedRevenue: "અંદાજિત આવક",
+                activeDeliveries: "સક્રિય ડિલિવરીઓ",
+                milkRates: "દૂધ દરો",
+                cowRate: "ગાયના દૂધનો દર / લિટર",
+                buffaloRate: "ભેંસના દૂધનો દર / લિટર",
+                updateRates: "દૂધ દર અપડેટ કરો",
+                customerManagement: "ગ્રાહક વ્યવસ્થાપન",
+                searchCustomer: "ગ્રાહક શોધો...",
+                name: "નામ",
+                bill: "બિલ",
+                payment: "ચુકવણી",
+                delivery: "ડિલિવરી",
+                noData: "કોઈ ડેટા નથી",
+                subscriptionSaved: "સબ્સ્ક્રિપ્શન સફળતાપૂર્વક સેવ થઈ.",
+                profileUpdated: "પ્રોફાઇલ સફળતાપૂર્વક અપડેટ થઈ.",
+                ratesUpdated: "દૂધ દર અપડેટ થયા.",
+                feedbackSubmitted: "તમારા પ્રતિસાદ બદલ આભાર!",
+                loggedOut: "લૉગઆઉટ થયા.",
+                welcome: "સ્વાગત છે",
+                customer: "ગ્રાહક",
+                loading: "લોડ થઈ રહ્યું છે...",
+                order: "ઓર્ડર",
+                delivered: "પહોંચાડેલ",
+                outForDelivery: "ડિલિવરી માટે બહાર",
+                pendingStatus: "બાકી",
+                statusUpdated: "સ્થિતિ અપડેટ થઈ",
+                paymentUpdated: "ચુકવણી અપડેટ થઈ",
+                billExported: "બિલ નિકાસ થયું!",
+                darkMode: "ડાર્ક મોડ",
+                lightMode: "લાઇટ મોડ",
+                gujarati: "ગુજરાતી",
+                english: "અંગ્રેજી",
+                selectLanguage: "ભાષા પસંદ કરો",
+                today: "આજે",
+                month: "મહિનો",
+                year: "વર્ષ",
+                total: "કુલ",
+                from: "થી",
+                to: "સુધી",
+                filter: "ફિલ્ટર",
+                reset: "રીસેટ",
+                apply: "લાગુ કરો",
+                cancel: "રદ કરો",
+                save: "સેવ કરો",
+                delete: "કાઢી નાખો",
+                edit: "સંપાદિત કરો",
+                view: "જુઓ",
+                back: "પાછા",
+                next: "આગળ",
+                previous: "પાછળ",
+                confirm: "પુષ્ટિ કરો",
+                areYouSure: "શું તમને ખાતરી છે?",
+                yes: "હા",
+                no: "ના",
+                success: "સફળ",
+                error: "ભૂલ",
+                warning: "ચેતવણી",
+                info: "માહિતી",
+                pleaseWait: "કૃપા કરી રાહ જુઓ...",
+                processing: "પ્રક્રિયા થઈ રહી છે...",
+                done: "થઈ ગયું",
+                failed: "નિષ્ફળ",
+                retry: "ફરી પ્રયાસ કરો",
+                close: "બંધ કરો",
+                open: "ખોલો",
+                more: "વધુ",
+                less: "ઓછું",
+                all: "બધા",
+                none: "કોઈ નહીં",
+                some: "કેટલાક",
+                any: "કોઈપણ",
+                between: "વચ્ચે",
+                and: "અને",
+                or: "અથવા",
+                with: "સાથે",
+                without: "વગર",
+                including: "સહિત",
+                excluding: "સિવાય",
+                only: "માત્ર",
+                also: "પણ",
+                too: "પણ",
+                very: "ખૂબ",
+                quite: "ઘણું",
+                rather: "તદ્દન",
+                fairly: "યોગ્ય",
+                extremely: "અત્યંત",
+                absolutely: "સંપૂર્ણપણે",
+                completely: "સંપૂર્ણ રીતે",
+                totally: "કુલ",
+                utterly: "એકદમ",
+                highly: "અત્યંત",
+                deeply: "ઊંડે",
+                strongly: "મજબૂત",
+                really: "ખરેખર",
+                truly: "સાચે જ",
+                indeed: "ખરેખર",
+                certainly: "ચોક્કસ",
+                definitely: "ચોક્કસપણે",
+                surely: "નિશ્ચિતપણે",
+                probably: "કદાચ",
+                possibly: "શક્ય છે",
+                perhaps: "કદાચ",
+                maybe: "કદાચ",
+                might: "કદાચ",
+                could: "શકે",
+                would: "થશે",
+                should: "જોઈએ",
+                must: "જોઈએ",
+                shall: "થશે",
+                will: "થશે",
+                may: "શકે",
+                can: "શકે",
+                do: "કરો",
+                does: "કરે",
+                did: "કર્યું",
+                done: "થઈ ગયું",
+                doing: "કરી રહ્યા છે",
+                go: "જાઓ",
+                goes: "જાય",
+                went: "ગયા",
+                gone: "ગયા",
+                going: "જઈ રહ્યા છે",
+                make: "બનાવો",
+                makes: "બનાવે",
+                made: "બનાવ્યું",
+                making: "બનાવી રહ્યા છે",
+                have: "છે",
+                has: "છે",
+                had: "હતું",
+                having: "ધરાવે છે",
+                be: "હોવું",
+                being: "હોવું",
+                been: "રહ્યું",
+                am: "છું",
+                is: "છે",
+                are: "છો",
+                was: "હતું",
+                were: "હતા",
+                noCustomers: "કોઈ ગ્રાહક મળ્યા નથી.",
+                customerDeleted: "ગ્રાહક કાઢી નાખ્યો.",
+                confirmDelete: "શું તમે ખરેખર આ ગ્રાહકને કાઢી નાખવા માંગો છો?",
+            }
+        };
 
-        /* =====================================================
-           AUTH UI
-           ===================================================== */
+        function t(key) {
+            return translations[currentLang]?.[key] || translations.en[key] || key;
+        }
 
+        // ─── LANGUAGE ───
+        window.toggleLanguage = function() {
+            currentLang = (currentLang === 'en') ? 'gu' : 'en';
+            document.getElementById('langLabel').textContent = currentLang.toUpperCase();
+            applyTranslations();
+            showToast('Language: ' + (currentLang === 'en' ? 'English' : 'ગુજરાતી'));
+        };
+
+        function applyTranslations() {
+            document.querySelectorAll('[data-lang]').forEach(el => {
+                const key = el.dataset.lang;
+                const val = t(key);
+                if (val) el.textContent = val;
+            });
+            document.querySelectorAll('[data-lang-placeholder]').forEach(el => {
+                const key = el.dataset.langPlaceholder;
+                const val = t(key);
+                if (val) el.placeholder = val;
+            });
+            // Special: welcome title with name
+            const welcomeEl = document.getElementById('welcomeTitle');
+            if (welcomeEl && currentCustomer) {
+                welcomeEl.textContent = t('welcome') + ', ' + (currentCustomer.name || t('customer'));
+            }
+        }
+
+        // ─── THEME ───
+        window.toggleTheme = function() {
+            currentTheme = (currentTheme === 'light') ? 'dark' : 'light';
+            document.documentElement.setAttribute('data-theme', currentTheme);
+            localStorage.setItem('theme', currentTheme);
+        };
+
+        // Load saved theme
+        const savedTheme = localStorage.getItem('theme');
+        if (savedTheme) {
+            currentTheme = savedTheme;
+            document.documentElement.setAttribute('data-theme', currentTheme);
+        }
+
+        // ─── AUTH UI ───
         window.showLogin = function() {
-            document.getElementById("loginForm").classList.remove("hidden");
-            document.getElementById("registerForm").classList.add("hidden");
-            document.getElementById("loginTab").classList.add("active");
-            document.getElementById("registerTab").classList.remove("active");
+            document.getElementById('loginForm').classList.remove('hidden');
+            document.getElementById('registerForm').classList.add('hidden');
+            document.getElementById('loginTab').classList.add('active');
+            document.getElementById('registerTab').classList.remove('active');
         };
-
         window.showRegister = function() {
-            document.getElementById("loginForm").classList.add("hidden");
-            document.getElementById("registerForm").classList.remove("hidden");
-            document.getElementById("loginTab").classList.remove("active");
-            document.getElementById("registerTab").classList.add("active");
+            document.getElementById('loginForm').classList.add('hidden');
+            document.getElementById('registerForm').classList.remove('hidden');
+            document.getElementById('loginTab').classList.remove('active');
+            document.getElementById('registerTab').classList.add('active');
         };
 
-
-        /* =====================================================
-           REGISTER
-           ===================================================== */
-
+        // ─── REGISTER ───
         window.registerUser = async function() {
-            const name = document.getElementById("regName").value.trim();
-            const phone = document.getElementById("regPhone").value.trim();
-            const email = document.getElementById("regEmail").value.trim();
-            const password = document.getElementById("regPassword").value;
-            const address = document.getElementById("regAddress").value.trim();
+            const name = document.getElementById('regName').value.trim();
+            const phone = document.getElementById('regPhone').value.trim();
+            const email = document.getElementById('regEmail').value.trim();
+            const password = document.getElementById('regPassword').value;
+            const address = document.getElementById('regAddress').value.trim();
 
             if (!name || !phone || !email || !password || !address) {
-                showAuthMessage("Please fill all fields.");
+                showAuthMessage(t('pleaseWait'));
                 return;
             }
-
             if (password.length < 6) {
-                showAuthMessage("Password must contain at least 6 characters.");
+                showAuthMessage(t('min6Chars'));
                 return;
             }
-
             try {
                 const result = await createUserWithEmailAndPassword(auth, email, password);
-
-                await setDoc(doc(db, "customers", result.user.uid), {
+                await setDoc(doc(db, 'customers', result.user.uid), {
                     uid: result.user.uid,
-                    name: name,
-                    phone: phone,
-                    email: email,
-                    address: address,
-                    role: email.toLowerCase() === ADMIN_EMAIL.toLowerCase() ? "admin" : "customer",
+                    name,
+                    phone,
+                    email,
+                    address,
+                    role: email.toLowerCase() === ADMIN_EMAIL.toLowerCase() ? 'admin' : 'customer',
                     subscription: null,
-                    paymentStatus: "Pending",
-                    deliveryStatus: "Pending",
-                    createdAt: serverTimestamp()
+                    paymentStatus: 'Pending',
+                    deliveryStatus: 'Pending',
+                    createdAt: serverTimestamp(),
+                    feedbacks: [],
+                    orders: []
                 });
-
-                showToast("Account created successfully.");
+                showToast(t('success'));
             } catch (error) {
                 showAuthMessage(error.message);
             }
         };
 
-
-        /* =====================================================
-           LOGIN
-           ===================================================== */
-
+        // ─── LOGIN ───
         window.loginUser = async function() {
-            const email = document.getElementById("loginEmail").value.trim();
-            const password = document.getElementById("loginPassword").value;
-
+            const email = document.getElementById('loginEmail').value.trim();
+            const password = document.getElementById('loginPassword').value;
             if (!email || !password) {
-                showAuthMessage("Enter email and password.");
+                showAuthMessage(t('pleaseWait'));
                 return;
             }
-
             try {
                 await signInWithEmailAndPassword(auth, email, password);
             } catch (error) {
@@ -1198,352 +1751,422 @@
             }
         };
 
-
-        /* =====================================================
-           AUTH STATE
-           ===================================================== */
-
+        // ─── AUTH STATE ───
         onAuthStateChanged(auth, async user => {
             if (user) {
                 currentUser = user;
-                document.getElementById("authScreen").classList.add("hidden");
-                document.getElementById("app").classList.remove("hidden");
+                document.getElementById('authScreen').classList.add('hidden');
+                document.getElementById('app').classList.remove('hidden');
                 await loadCustomer();
             } else {
                 currentUser = null;
-                document.getElementById("authScreen").classList.remove("hidden");
-                document.getElementById("app").classList.add("hidden");
+                document.getElementById('authScreen').classList.remove('hidden');
+                document.getElementById('app').classList.add('hidden');
             }
         });
 
-
-        /* =====================================================
-           LOAD CUSTOMER
-           ===================================================== */
-
+        // ─── LOAD CUSTOMER ───
         async function loadCustomer() {
             try {
-                const snap = await getDoc(doc(db, "customers", currentUser.uid));
-
+                const snap = await getDoc(doc(db, 'customers', currentUser.uid));
                 if (!snap.exists()) {
-                    await setDoc(doc(db, "customers", currentUser.uid), {
+                    await setDoc(doc(db, 'customers', currentUser.uid), {
                         uid: currentUser.uid,
-                        name: currentUser.email.split("@")[0],
+                        name: currentUser.email.split('@')[0],
                         email: currentUser.email,
-                        role: currentUser.email.toLowerCase() === ADMIN_EMAIL.toLowerCase() ? "admin" : "customer",
+                        role: currentUser.email.toLowerCase() === ADMIN_EMAIL.toLowerCase() ? 'admin' : 'customer',
                         subscription: null,
-                        paymentStatus: "Pending",
-                        deliveryStatus: "Pending",
-                        createdAt: serverTimestamp()
+                        paymentStatus: 'Pending',
+                        deliveryStatus: 'Pending',
+                        createdAt: serverTimestamp(),
+                        feedbacks: [],
+                        orders: []
                     });
-
                     currentCustomer = {
-                        name: currentUser.email.split("@")[0],
+                        name: currentUser.email.split('@')[0],
                         email: currentUser.email,
-                        role: currentUser.email.toLowerCase() === ADMIN_EMAIL.toLowerCase() ? "admin" : "customer"
+                        role: currentUser.email.toLowerCase() === ADMIN_EMAIL.toLowerCase() ? 'admin' : 'customer'
                     };
                 } else {
                     currentCustomer = snap.data();
                 }
+                document.getElementById('navUser').textContent = currentCustomer.name || currentUser.email;
+                const welcomeEl = document.getElementById('welcomeTitle');
+                if (welcomeEl) welcomeEl.textContent = t('welcome') + ', ' + (currentCustomer.name || t('customer'));
 
-                document.getElementById("navUser").textContent = currentCustomer.name || currentUser.email;
-                document.getElementById("welcomeTitle").textContent = "Welcome, " + (currentCustomer.name || "Customer");
-
-                if (currentCustomer.role === "admin" || currentUser.email.toLowerCase() === ADMIN_EMAIL.toLowerCase()) {
-                    document.getElementById("adminNav").classList.remove("hidden");
+                if (currentCustomer.role === 'admin' || currentUser.email.toLowerCase() === ADMIN_EMAIL.toLowerCase()) {
+                    document.getElementById('adminNav').classList.remove('hidden');
                 }
-
                 await loadRates();
                 await loadDashboard();
                 loadProfile();
+                loadOrderHistory();
+                loadUserFeedback();
+                applyTranslations();
             } catch (error) {
                 console.error(error);
-                showToast("Unable to load account.");
+                showToast('Unable to load account.');
             }
         }
 
-
-        /* =====================================================
-           RATES
-           ===================================================== */
-
+        // ─── RATES ───
         async function loadRates() {
             try {
-                const snap = await getDoc(doc(db, "settings", "rates"));
+                const snap = await getDoc(doc(db, 'settings', 'rates'));
                 if (snap.exists()) {
                     const data = snap.data();
                     rates.Cow = Number(data.Cow || 60);
                     rates.Buffalo = Number(data.Buffalo || 70);
                 }
-            } catch (error) {
-                console.log(error);
-            }
-
-            document.getElementById("cowRateText").textContent = "₹" + rates.Cow + " / L";
-            document.getElementById("buffaloRateText").textContent = "₹" + rates.Buffalo + " / L";
-            if (document.getElementById("cowRate"))
-                document.getElementById("cowRate").value = rates.Cow;
-            if (document.getElementById("buffaloRate"))
-                document.getElementById("buffaloRate").value = rates.Buffalo;
-
+            } catch (error) { console.log(error); }
+            document.getElementById('cowRateText').textContent = '₹' + rates.Cow + ' / L';
+            document.getElementById('buffaloRateText').textContent = '₹' + rates.Buffalo + ' / L';
+            if (document.getElementById('cowRate')) document.getElementById('cowRate').value = rates.Cow;
+            if (document.getElementById('buffaloRate')) document.getElementById('buffaloRate').value = rates.Buffalo;
             calculatePreview();
         }
 
-
-        /* =====================================================
-           SELECT MILK
-           ===================================================== */
-
+        // ─── SELECT MILK ───
         window.selectMilk = function(type) {
             selectedMilk = type;
-            document.getElementById("cowOption").classList.toggle("selected", type === "Cow");
-            document.getElementById("buffaloOption").classList.toggle("selected", type === "Buffalo");
+            document.getElementById('cowOption').classList.toggle('selected', type === 'Cow');
+            document.getElementById('buffaloOption').classList.toggle('selected', type === 'Buffalo');
             calculatePreview();
         };
 
-
-        /* =====================================================
-           CALCULATE BILL
-           ===================================================== */
-
+        // ─── CALCULATE ───
         function calculatePreview() {
-            const quantity = Number(document.getElementById("quantity").value || 1);
-            const days = Number(document.getElementById("deliveryDays").value || 30);
+            const quantity = Number(document.getElementById('quantity').value || 1);
+            const days = Number(document.getElementById('deliveryDays').value || 30);
             const rate = rates[selectedMilk];
             const daily = quantity * rate;
             const total = daily * days;
-
-            document.getElementById("previewDaily").textContent = "₹" + daily.toFixed(2);
-            document.getElementById("previewTotal").textContent = "₹" + total.toFixed(2);
+            document.getElementById('previewDaily').textContent = '₹' + daily.toFixed(2);
+            document.getElementById('previewTotal').textContent = '₹' + total.toFixed(2);
         }
+        document.getElementById('quantity').addEventListener('change', calculatePreview);
+        document.getElementById('deliveryDays').addEventListener('change', calculatePreview);
 
-        document.getElementById("quantity").addEventListener("change", calculatePreview);
-        document.getElementById("deliveryDays").addEventListener("change", calculatePreview);
-
-
-        /* =====================================================
-           SAVE SUBSCRIPTION
-           ===================================================== */
-
+        // ─── SAVE SUBSCRIPTION ───
         window.saveSubscription = async function() {
             if (!currentUser) return;
-
-            const quantity = Number(document.getElementById("quantity").value);
-            const days = Number(document.getElementById("deliveryDays").value);
+            const quantity = Number(document.getElementById('quantity').value);
+            const days = Number(document.getElementById('deliveryDays').value);
             const rate = rates[selectedMilk];
             const total = quantity * rate * days;
-
             const subscription = {
                 milkType: selectedMilk,
-                quantity: quantity,
-                days: days,
-                rate: rate,
-                total: total,
+                quantity,
+                days,
+                rate,
+                total,
                 active: true,
-                updatedAt: serverTimestamp()
+                updatedAt: serverTimestamp(),
+                createdAt: new Date().toISOString()
             };
-
             try {
-                await updateDoc(doc(db, "customers", currentUser.uid), {
-                    subscription: subscription,
-                    paymentStatus: "Pending",
-                    deliveryStatus: "Pending"
+                await updateDoc(doc(db, 'customers', currentUser.uid), {
+                    subscription,
+                    paymentStatus: 'Pending',
+                    deliveryStatus: 'Pending'
                 });
-
                 currentCustomer.subscription = subscription;
-                currentCustomer.paymentStatus = "Pending";
-                currentCustomer.deliveryStatus = "Pending";
-
-                showToast("Subscription saved successfully.");
+                currentCustomer.paymentStatus = 'Pending';
+                currentCustomer.deliveryStatus = 'Pending';
+                // Add to order history
+                const orderEntry = {
+                    ...subscription,
+                    date: new Date().toISOString(),
+                    status: 'Active'
+                };
+                if (!currentCustomer.orders) currentCustomer.orders = [];
+                currentCustomer.orders.push(orderEntry);
+                await updateDoc(doc(db, 'customers', currentUser.uid), {
+                    orders: currentCustomer.orders
+                });
+                showToast(t('subscriptionSaved'));
                 await loadDashboard();
+                loadOrderHistory();
             } catch (error) {
                 showToast(error.message);
             }
         };
 
-
-        /* =====================================================
-           DASHBOARD
-           ===================================================== */
-
+        // ─── DASHBOARD ───
         async function loadDashboard() {
             const sub = currentCustomer.subscription;
-
             if (!sub) {
-                document.getElementById("dashMilk").textContent = "0 L";
-                document.getElementById("dashDays").textContent = "0";
-                document.getElementById("dashBill").textContent = "₹0";
-                document.getElementById("dashDelivery").textContent = "Pending";
-                document.getElementById("currentSubscription").innerHTML = "<p>No active subscription.</p>";
+                document.getElementById('dashMilk').textContent = '0 L';
+                document.getElementById('dashDays').textContent = '0';
+                document.getElementById('dashBill').textContent = '₹0';
+                document.getElementById('dashDelivery').textContent = t('pending');
+                document.getElementById('currentSubscription').innerHTML = '<p>' + t('noActiveSub') + '</p>';
                 return;
             }
-
-            document.getElementById("dashMilk").textContent = sub.quantity + " L";
-            document.getElementById("dashDays").textContent = sub.days;
-            document.getElementById("dashBill").textContent = "₹" + Number(sub.total).toFixed(2);
-            document.getElementById("dashDelivery").textContent = currentCustomer.deliveryStatus || "Pending";
-
-            document.getElementById("currentSubscription").innerHTML = `
-                <div class="info-row"><span>Milk</span><strong>${sub.milkType}</strong></div>
-                <div class="info-row"><span>Quantity</span><strong>${sub.quantity} L / day</strong></div>
-                <div class="info-row"><span>Rate</span><strong>₹${sub.rate} / L</strong></div>
-                <div class="info-row"><span>Period</span><strong>${sub.days} days</strong></div>
-                <div class="info-row"><span>Total</span><strong>₹${Number(sub.total).toFixed(2)}</strong></div>
+            document.getElementById('dashMilk').textContent = sub.quantity + ' L';
+            document.getElementById('dashDays').textContent = sub.days;
+            document.getElementById('dashBill').textContent = '₹' + Number(sub.total).toFixed(2);
+            document.getElementById('dashDelivery').textContent = currentCustomer.deliveryStatus || t('pending');
+            document.getElementById('currentSubscription').innerHTML = `
+                <div class="info-row"><span>${t('milk')}</span><strong>${sub.milkType}</strong></div>
+                <div class="info-row"><span>${t('quantity')}</span><strong>${sub.quantity} L / day</strong></div>
+                <div class="info-row"><span>${t('rateUs')}</span><strong>₹${sub.rate} / L</strong></div>
+                <div class="info-row"><span>${t('days')}</span><strong>${sub.days} days</strong></div>
+                <div class="info-row"><span>${t('total')}</span><strong>₹${Number(sub.total).toFixed(2)}</strong></div>
             `;
-
             loadBilling();
             loadDelivery();
         }
 
-
-        /* =====================================================
-           BILLING
-           ===================================================== */
-
+        // ─── BILLING ───
         function loadBilling() {
             const sub = currentCustomer.subscription;
             if (!sub) {
-                document.getElementById("customerBill").innerHTML = "<p>No bill available.</p>";
+                document.getElementById('customerBill').innerHTML = '<p>' + t('noData') + '</p>';
                 return;
             }
-
-            document.getElementById("customerBill").innerHTML = `
+            document.getElementById('customerBill').innerHTML = `
                 <div class="bill">
-                    <h3>Khodaamba Milk Dairy</h3>
+                    <h3>${t('appName')}</h3>
                     <br>
-                    <div class="info-row"><span>Milk Type</span><strong>${sub.milkType}</strong></div>
-                    <div class="info-row"><span>Daily Quantity</span><strong>${sub.quantity} L</strong></div>
-                    <div class="info-row"><span>Rate</span><strong>₹${sub.rate}/L</strong></div>
-                    <div class="info-row"><span>Days</span><strong>${sub.days}</strong></div>
+                    <div class="info-row"><span>${t('milkType')}</span><strong>${sub.milkType}</strong></div>
+                    <div class="info-row"><span>${t('dailyQty')}</span><strong>${sub.quantity} L</strong></div>
+                    <div class="info-row"><span>${t('rateUs')}</span><strong>₹${sub.rate}/L</strong></div>
+                    <div class="info-row"><span>${t('days')}</span><strong>${sub.days}</strong></div>
                     <br>
-                    <p>Total Amount</p>
+                    <p>${t('total')}</p>
                     <div class="bill-total">₹${Number(sub.total).toFixed(2)}</div>
                 </div>
             `;
-
-            const status = currentCustomer.paymentStatus || "Pending";
-            const element = document.getElementById("customerPaymentStatus");
-            element.textContent = status;
-            element.className = "badge " + (status === "Paid" ? "green" : "orange");
+            const status = currentCustomer.paymentStatus || 'Pending';
+            const el = document.getElementById('customerPaymentStatus');
+            el.textContent = status;
+            el.className = 'badge ' + (status === 'Paid' ? 'green' : 'orange');
+            // Due date: 7 days from now
+            const due = new Date();
+            due.setDate(due.getDate() + 7);
+            document.getElementById('dueDateDisplay').textContent = due.toLocaleDateString();
         }
 
-
-        /* =====================================================
-           DELIVERY
-           ===================================================== */
-
+        // ─── DELIVERY ───
         function loadDelivery() {
             const sub = currentCustomer.subscription;
             if (!sub) return;
-
-            document.getElementById("deliveryMilk").textContent = sub.milkType;
-            document.getElementById("deliveryQuantity").textContent = sub.quantity + " L";
-
-            const status = currentCustomer.deliveryStatus || "Pending";
-            const element = document.getElementById("deliveryStatus");
-            element.textContent = status;
-            element.className = "badge " + (
-                status === "Delivered" ? "green" :
-                status === "Out for Delivery" ? "blue" : "orange"
-            );
+            document.getElementById('deliveryMilk').textContent = sub.milkType;
+            document.getElementById('deliveryQuantity').textContent = sub.quantity + ' L';
+            const status = currentCustomer.deliveryStatus || 'Pending';
+            const el = document.getElementById('deliveryStatus');
+            el.textContent = status;
+            el.className = 'badge ' + (status === 'Delivered' ? 'green' : status === 'Out for Delivery' ? 'blue' : 'orange');
+            // Delivery date: today
+            document.getElementById('deliveryDateDisplay').textContent = new Date().toLocaleDateString();
+            // History
+            const historyEl = document.getElementById('deliveryHistoryList');
+            if (currentCustomer.orders && currentCustomer.orders.length > 0) {
+                let html = '';
+                const recent = currentCustomer.orders.slice(-5).reverse();
+                recent.forEach(o => {
+                    html += `
+                        <div class="info-row">
+                            <span>${new Date(o.date).toLocaleDateString()}</span>
+                            <span>${o.milkType} - ${o.quantity}L</span>
+                            <span class="badge ${o.status === 'Delivered' ? 'green' : 'orange'}">${o.status || t('pending')}</span>
+                        </div>
+                    `;
+                });
+                historyEl.innerHTML = html;
+            } else {
+                historyEl.innerHTML = '<p class="text-muted">' + t('noDeliveryHistory') + '</p>';
+            }
         }
 
-
-        /* =====================================================
-           PROFILE
-           ===================================================== */
-
-        function loadProfile() {
-            document.getElementById("profileName").value = currentCustomer.name || "";
-            document.getElementById("profilePhone").value = currentCustomer.phone || "";
-            document.getElementById("profileAddress").value = currentCustomer.address || "";
+        // ─── ORDER HISTORY ───
+        async function loadOrderHistory() {
+            const table = document.getElementById('orderHistoryTable');
+            if (!currentCustomer.orders || currentCustomer.orders.length === 0) {
+                table.innerHTML = '<tr><td colspan="6" class="text-center text-muted">' + t('noOrders') + '</td></tr>';
+                return;
+            }
+            let html = '';
+            const orders = currentCustomer.orders.slice().reverse();
+            orders.forEach(o => {
+                html += `
+                    <tr>
+                        <td>${new Date(o.date).toLocaleDateString()}</td>
+                        <td>${o.milkType || '-'}</td>
+                        <td>${o.quantity || '-'} L</td>
+                        <td>${o.days || '-'}</td>
+                        <td>₹${Number(o.total || 0).toFixed(2)}</td>
+                        <td><span class="badge ${o.status === 'Active' ? 'green' : 'orange'}">${o.status || t('pending')}</span></td>
+                    </tr>
+                `;
+            });
+            table.innerHTML = html;
         }
 
-        window.updateProfile = async function() {
-            const name = document.getElementById("profileName").value.trim();
-            const phone = document.getElementById("profilePhone").value.trim();
-            const address = document.getElementById("profileAddress").value.trim();
+        // ─── FEEDBACK ───
+        let selectedRating = 0;
+        document.addEventListener('DOMContentLoaded', () => {
+            const stars = document.querySelectorAll('#starRating span');
+            stars.forEach(star => {
+                star.addEventListener('click', function() {
+                    selectedRating = parseInt(this.dataset.value);
+                    stars.forEach(s => {
+                        s.classList.toggle('active', parseInt(s.dataset.value) <= selectedRating);
+                        s.textContent = parseInt(s.dataset.value) <= selectedRating ? '★' : '☆';
+                    });
+                });
+                star.addEventListener('mouseenter', function() {
+                    const val = parseInt(this.dataset.value);
+                    stars.forEach(s => {
+                        const sv = parseInt(s.dataset.value);
+                        s.textContent = sv <= val ? '★' : '☆';
+                    });
+                });
+                star.addEventListener('mouseleave', function() {
+                    stars.forEach(s => {
+                        const sv = parseInt(s.dataset.value);
+                        s.textContent = sv <= selectedRating ? '★' : '☆';
+                    });
+                });
+            });
+        });
 
+        window.submitFeedback = async function() {
+            if (!currentUser) return;
+            const text = document.getElementById('feedbackText').value.trim();
+            if (!text || selectedRating === 0) {
+                showToast('Please rate and write feedback.');
+                return;
+            }
+            const feedback = {
+                rating: selectedRating,
+                text: text,
+                date: new Date().toISOString(),
+                name: currentCustomer.name || 'Customer'
+            };
             try {
-                await updateDoc(doc(db, "customers", currentUser.uid), { name, phone, address });
-                currentCustomer.name = name;
-                currentCustomer.phone = phone;
-                currentCustomer.address = address;
-                document.getElementById("navUser").textContent = name;
-                showToast("Profile updated successfully.");
+                // Save to feedbacks collection
+                await addDoc(collection(db, 'feedbacks'), {
+                    ...feedback,
+                    uid: currentUser.uid,
+                    email: currentUser.email
+                });
+                // Save to customer
+                if (!currentCustomer.feedbacks) currentCustomer.feedbacks = [];
+                currentCustomer.feedbacks.push(feedback);
+                await updateDoc(doc(db, 'customers', currentUser.uid), {
+                    feedbacks: currentCustomer.feedbacks
+                });
+                showToast(t('feedbackSubmitted'));
+                document.getElementById('feedbackText').value = '';
+                selectedRating = 0;
+                document.querySelectorAll('#starRating span').forEach(s => {
+                    s.classList.remove('active');
+                    s.textContent = '☆';
+                });
+                loadUserFeedback();
             } catch (error) {
                 showToast(error.message);
             }
         };
 
-
-        /* =====================================================
-           ADMIN
-           ===================================================== */
-
-        async function loadAdmin() {
-            if (currentCustomer.role !== "admin" && currentUser.email.toLowerCase() !== ADMIN_EMAIL.toLowerCase()) {
+        async function loadUserFeedback() {
+            const el = document.getElementById('userFeedbackList');
+            if (!currentCustomer.feedbacks || currentCustomer.feedbacks.length === 0) {
+                el.innerHTML = '<p class="text-muted">' + t('noFeedback') + '</p>';
                 return;
             }
+            let html = '';
+            currentCustomer.feedbacks.slice().reverse().forEach(f => {
+                const stars = '★'.repeat(f.rating) + '☆'.repeat(5 - f.rating);
+                html += `
+                    <div class="info-row">
+                        <span>${new Date(f.date).toLocaleDateString()}</span>
+                        <span class="rating-display">${stars}</span>
+                        <span>${f.text}</span>
+                    </div>
+                `;
+            });
+            el.innerHTML = html;
+        }
 
+        // ─── PROFILE ───
+        function loadProfile() {
+            document.getElementById('profileName').value = currentCustomer.name || '';
+            document.getElementById('profilePhone').value = currentCustomer.phone || '';
+            document.getElementById('profileAddress').value = currentCustomer.address || '';
+        }
+        window.updateProfile = async function() {
+            const name = document.getElementById('profileName').value.trim();
+            const phone = document.getElementById('profilePhone').value.trim();
+            const address = document.getElementById('profileAddress').value.trim();
             try {
-                const snapshot = await getDocs(collection(db, "customers"));
+                await updateDoc(doc(db, 'customers', currentUser.uid), { name, phone, address });
+                currentCustomer.name = name;
+                currentCustomer.phone = phone;
+                currentCustomer.address = address;
+                document.getElementById('navUser').textContent = name;
+                showToast(t('profileUpdated'));
+            } catch (error) {
+                showToast(error.message);
+            }
+        };
+
+        // ─── ADMIN ───
+        async function loadAdmin() {
+            if (currentCustomer.role !== 'admin' && currentUser.email.toLowerCase() !== ADMIN_EMAIL.toLowerCase()) return;
+            try {
+                const snapshot = await getDocs(collection(db, 'customers'));
                 let customers = [];
                 let totalLitres = 0;
                 let revenue = 0;
                 let deliveries = 0;
-
                 snapshot.forEach(item => {
                     const data = item.data();
-                    if (data.role === "admin") return;
-                    customers.push(data);
+                    if (data.role === 'admin') return;
+                    customers.push({ ...data, uid: item.id });
                     if (data.subscription) {
                         totalLitres += Number(data.subscription.quantity || 0);
                         revenue += Number(data.subscription.total || 0);
                         deliveries++;
                     }
                 });
-
-                document.getElementById("adminCustomers").textContent = customers.length;
-                document.getElementById("adminLitres").textContent = totalLitres.toFixed(1) + " L";
-                document.getElementById("adminRevenue").textContent = "₹" + revenue.toFixed(0);
-                document.getElementById("adminDeliveries").textContent = deliveries;
-
-                window.adminCustomersData = customers;
+                allCustomers = customers;
+                document.getElementById('adminCustomers').textContent = customers.length;
+                document.getElementById('adminLitres').textContent = totalLitres.toFixed(1) + ' L';
+                document.getElementById('adminRevenue').textContent = '₹' + revenue.toFixed(0);
+                document.getElementById('adminDeliveries').textContent = deliveries;
                 renderCustomers(customers);
-            } catch (error) {
-                console.error(error);
-            }
+            } catch (error) { console.error(error); }
         }
 
-
-        /* =====================================================
-           RENDER CUSTOMERS
-           ===================================================== */
-
         function renderCustomers(customers) {
-            const table = document.getElementById("customersTable");
-            table.innerHTML = "";
-
+            const table = document.getElementById('customersTable');
+            table.innerHTML = '';
+            if (!customers || customers.length === 0) {
+                table.innerHTML = '<tr><td colspan="8" class="text-center text-muted">' + t('noCustomers') + '</td></tr>';
+                return;
+            }
             customers.forEach(customer => {
                 const sub = customer.subscription;
-                const tr = document.createElement("tr");
+                const tr = document.createElement('tr');
                 tr.innerHTML = `
-                    <td>${customer.name || "-"}</td>
-                    <td>${customer.phone || "-"}</td>
-                    <td>${sub ? sub.milkType : "-"}</td>
-                    <td>${sub ? sub.quantity + " L" : "-"}</td>
-                    <td>${sub ? sub.days : "-"}</td>
-                    <td>${sub ? "₹" + Number(sub.total).toFixed(0) : "-"}</td>
+                    <td>${customer.name || '-'}</td>
+                    <td>${customer.phone || '-'}</td>
+                    <td>${sub ? sub.milkType : '-'}</td>
+                    <td>${sub ? sub.quantity + ' L' : '-'}</td>
+                    <td>${sub ? sub.days : '-'}</td>
+                    <td>${sub ? '₹' + Number(sub.total).toFixed(0) : '-'}</td>
                     <td>
-                        <button class="action-btn ${customer.paymentStatus === "Paid" ? "success" : "warning"}"
+                        <button class="action-btn ${customer.paymentStatus === 'Paid' ? 'success' : 'warning'}"
                             onclick="togglePayment('${customer.uid}')">
-                            ${customer.paymentStatus || "Pending"}
+                            ${customer.paymentStatus || t('pending')}
                         </button>
                     </td>
                     <td>
                         <button class="action-btn blue" onclick="changeDelivery('${customer.uid}')">
-                            ${customer.deliveryStatus || "Pending"}
+                            ${customer.deliveryStatus || t('pending')}
                         </button>
                     </td>
                 `;
@@ -1551,161 +2174,128 @@
             });
         }
 
-
-        /* =====================================================
-           FILTER CUSTOMERS
-           ===================================================== */
-
         window.filterCustomers = function() {
-            const search = document.getElementById("customerSearch").value.toLowerCase();
-            const filtered = (window.adminCustomersData || []).filter(customer =>
-                (customer.name || "").toLowerCase().includes(search) ||
-                (customer.phone || "").toLowerCase().includes(search) ||
-                (customer.email || "").toLowerCase().includes(search)
+            const search = document.getElementById('customerSearch').value.toLowerCase();
+            const filtered = allCustomers.filter(c =>
+                (c.name || '').toLowerCase().includes(search) ||
+                (c.phone || '').toLowerCase().includes(search) ||
+                (c.email || '').toLowerCase().includes(search)
             );
             renderCustomers(filtered);
         };
 
-
-        /* =====================================================
-           PAYMENT STATUS
-           ===================================================== */
-
         window.togglePayment = async function(uid) {
             try {
-                const customerRef = doc(db, "customers", uid);
-                const snap = await getDoc(customerRef);
+                const ref = doc(db, 'customers', uid);
+                const snap = await getDoc(ref);
                 if (!snap.exists()) return;
-
                 const data = snap.data();
-                const newStatus = data.paymentStatus === "Paid" ? "Pending" : "Paid";
-                await updateDoc(customerRef, { paymentStatus: newStatus });
-                showToast("Payment status updated.");
+                const newStatus = data.paymentStatus === 'Paid' ? 'Pending' : 'Paid';
+                await updateDoc(ref, { paymentStatus: newStatus });
+                showToast(t('paymentUpdated'));
                 loadAdmin();
-            } catch (error) {
-                showToast(error.message);
-            }
+            } catch (error) { showToast(error.message); }
         };
-
-
-        /* =====================================================
-           DELIVERY STATUS
-           ===================================================== */
 
         window.changeDelivery = async function(uid) {
             try {
-                const customerRef = doc(db, "customers", uid);
-                const snap = await getDoc(customerRef);
+                const ref = doc(db, 'customers', uid);
+                const snap = await getDoc(ref);
                 if (!snap.exists()) return;
-
                 const data = snap.data();
-                const statuses = ["Pending", "Out for Delivery", "Delivered"];
+                const statuses = ['Pending', 'Out for Delivery', 'Delivered'];
                 let current = statuses.indexOf(data.deliveryStatus);
                 if (current < 0) current = 0;
                 const next = statuses[(current + 1) % statuses.length];
-
-                await updateDoc(customerRef, { deliveryStatus: next });
-                showToast("Delivery status updated.");
+                await updateDoc(ref, { deliveryStatus: next });
+                showToast(t('statusUpdated'));
                 loadAdmin();
-
                 if (currentUser.uid === uid) {
                     currentCustomer.deliveryStatus = next;
                     loadDelivery();
                 }
-            } catch (error) {
-                showToast(error.message);
-            }
+            } catch (error) { showToast(error.message); }
         };
 
-
-        /* =====================================================
-           UPDATE RATES
-           ===================================================== */
-
         window.updateRates = async function() {
-            const cow = Number(document.getElementById("cowRate").value);
-            const buffalo = Number(document.getElementById("buffaloRate").value);
-
-            if (!cow || !buffalo) {
-                showToast("Enter valid rates.");
-                return;
-            }
-
+            const cow = Number(document.getElementById('cowRate').value);
+            const buffalo = Number(document.getElementById('buffaloRate').value);
+            if (!cow || !buffalo) { showToast('Enter valid rates.'); return; }
             try {
-                await setDoc(doc(db, "settings", "rates"), {
+                await setDoc(doc(db, 'settings', 'rates'), {
                     Cow: cow,
                     Buffalo: buffalo,
                     updatedAt: serverTimestamp()
                 });
-
                 rates.Cow = cow;
                 rates.Buffalo = buffalo;
-
-                document.getElementById("cowRateText").textContent = "₹" + cow + " / L";
-                document.getElementById("buffaloRateText").textContent = "₹" + buffalo + " / L";
-
+                document.getElementById('cowRateText').textContent = '₹' + cow + ' / L';
+                document.getElementById('buffaloRateText').textContent = '₹' + buffalo + ' / L';
                 calculatePreview();
-                showToast("Milk rates updated.");
-            } catch (error) {
-                showToast(error.message);
-            }
+                showToast(t('ratesUpdated'));
+            } catch (error) { showToast(error.message); }
         };
 
+        // ─── EXPORT BILL ───
+        window.exportBill = function() {
+            const sub = currentCustomer.subscription;
+            if (!sub) { showToast('No bill to export.'); return; }
+            const content = `
+            ${t('appName')}
+            ${t('bill')} #${Date.now().toString().slice(-6)}
+            ${t('date')}: ${new Date().toLocaleDateString()}
+            ${t('milk')}: ${sub.milkType}
+            ${t('quantity')}: ${sub.quantity} L
+            ${t('days')}: ${sub.days}
+            ${t('total')}: ₹${Number(sub.total).toFixed(2)}
+            ${t('paymentStatus')}: ${currentCustomer.paymentStatus || t('pending')}
+          `;
+            const blob = new Blob([content], { type: 'text/plain' });
+            const a = document.createElement('a');
+            a.href = URL.createObjectURL(blob);
+            a.download = 'Bill_' + new Date().toISOString().slice(0, 10) + '.txt';
+            a.click();
+            showToast(t('billExported'));
+        };
 
-        /* =====================================================
-           PAGE NAVIGATION
-           ===================================================== */
-
+        // ─── PAGE NAV ───
         window.openPage = async function(page) {
-            const pages = ["dashboard", "subscription", "billing", "delivery", "profile", "admin"];
+            const pages = ['dashboard', 'subscription', 'billing', 'delivery', 'history', 'feedback', 'profile', 'admin'];
             pages.forEach(p => {
-                const element = document.getElementById(p + "Page");
-                if (element) element.classList.toggle("hidden", p !== page);
+                const el = document.getElementById(p + 'Page');
+                if (el) el.classList.toggle('hidden', p !== page);
             });
-
-            if (page === "admin") {
-                await loadAdmin();
-            }
-
-            document.getElementById("sidebar").classList.remove("open");
+            if (page === 'admin') await loadAdmin();
+            if (page === 'history') loadOrderHistory();
+            if (page === 'feedback') loadUserFeedback();
+            document.getElementById('sidebar').classList.remove('open');
         };
 
-
-        /* =====================================================
-           SIDEBAR
-           ===================================================== */
-
+        // ─── SIDEBAR ───
         window.toggleSidebar = function() {
-            document.getElementById("sidebar").classList.toggle("open");
+            document.getElementById('sidebar').classList.toggle('open');
         };
 
-
-        /* =====================================================
-           LOGOUT
-           ===================================================== */
-
+        // ─── LOGOUT ───
         window.logoutUser = async function() {
             await signOut(auth);
-            showToast("Logged out.");
+            showToast(t('loggedOut'));
         };
 
-
-        /* =====================================================
-           MESSAGE
-           ===================================================== */
-
-        function showAuthMessage(message) {
-            document.getElementById("authMessage").textContent = message;
+        // ─── TOAST ───
+        function showAuthMessage(msg) {
+            document.getElementById('authMessage').textContent = msg;
         }
-
-        window.showToast = function(message) {
-            const toast = document.getElementById("toast");
-            toast.textContent = message;
-            toast.classList.add("show");
-            setTimeout(() => {
-                toast.classList.remove("show");
-            }, 3000);
+        window.showToast = function(msg) {
+            const toast = document.getElementById('toast');
+            toast.textContent = msg;
+            toast.classList.add('show');
+            setTimeout(() => toast.classList.remove('show'), 3000);
         };
+
+        // ─── INIT ───
+        applyTranslations();
+        console.log('🥛 Khodaamba Milk Dairy loaded successfully!');
     </script>
 
 </body>
