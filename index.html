@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Khodaamba Milk Dairy · Game Hub</title>
+    <title>Game24 24/7 · Dairy & Games</title>
 
     <!-- Firebase -->
     <script src="https://www.gstatic.com/firebasejs/12.18.0/firebase-app.js">
@@ -864,9 +864,9 @@
     <div id="authScreen" class="auth-screen">
         <div class="auth-box">
             <div class="logo">
-                <div class="logo-icon">🥛</div>
-                <h1>Khodaamba Milk Dairy</h1>
-                <p>Fresh Milk · Fresh Life</p>
+                <div class="logo-icon">🎮</div>
+                <h1>Game24 24/7</h1>
+                <p>24/7 Gaming Fun</p>
             </div>
             <div class="auth-tabs">
                 <button id="loginTab" class="active" onclick="showLogin()">Login</button>
@@ -917,8 +917,8 @@
         <div class="navbar">
             <div class="nav-brand">
                 <button class="mobile-menu" onclick="toggleSidebar()">☰</button>
-                <div class="mini-logo">🥛</div>
-                <h2>Khodaamba Milk Dairy</h2>
+                <div class="mini-logo">🎮</div>
+                <h2>Game24 24/7</h2>
             </div>
             <div class="nav-right">
                 <span id="navUser" class="user-name"></span>
@@ -982,25 +982,25 @@
                     <div class="game-grid" id="gameGrid">
                         <div class="game-card" onclick="launchGame('chess')">
                             <span class="icon">♟️</span>
-                            <h3>Chess</h3>
-                            <p>Play chess against a friend.</p>
+                            <h3>Game 1</h3>
+                            <p>Classic chess challenge.</p>
                             <span class="play-badge">▶ Play</span>
                         </div>
                         <div class="game-card" onclick="launchGame('ludo')">
                             <span class="icon">🎲</span>
-                            <h3>Ludo</h3>
+                            <h3>Game 2</h3>
                             <p>Roll the dice and race home!</p>
                             <span class="play-badge">▶ Play</span>
                         </div>
                         <div class="game-card" onclick="launchGame('racing')">
                             <span class="icon">🏎️</span>
-                            <h3>Car Racing</h3>
+                            <h3>Game 3</h3>
                             <p>Dodge traffic and survive!</p>
                             <span class="play-badge">▶ Play</span>
                         </div>
                         <div class="game-card" onclick="launchGame('bus')">
                             <span class="icon">🚌</span>
-                            <h3>Bus Driving</h3>
+                            <h3>Game 4</h3>
                             <p>Drive through multiple maps.</p>
                             <span class="play-badge">▶ Play</span>
                         </div>
@@ -1359,7 +1359,7 @@
             activeGame = gameId;
             document.getElementById('gameGrid').classList.add('hidden');
             document.getElementById('gamePlayArea').classList.remove('hidden');
-            const titles = { chess: '♟️ Chess', ludo: '🎲 Ludo', racing: '🏎️ Car Racing', bus: '🚌 Bus Driving' };
+            const titles = { chess: '♟️ Game 1', ludo: '🎲 Game 2', racing: '🏎️ Game 3', bus: '🚌 Game 4' };
             document.getElementById('gameTitle').textContent = titles[gameId] || 'Game';
             const content = document.getElementById('gameContent');
             if (gameId === 'chess') renderChess(content);
@@ -1816,7 +1816,7 @@
         }
 
         // ─── INIT ───
-        console.log('🥛 Khodaamba Milk Dairy · Game Hub loaded!');
+        console.log('🎮 Game24 24/7 · Dairy & Games loaded!');
     </script>
 </body>
 </html>
