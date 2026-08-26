@@ -1,2528 +1,1712 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Khodaamba Milk Dairy</title>
-
-<script src="https://www.gstatic.com/firebasejs/12.18.0/firebase-app.js"></script>
-<script src="https://www.gstatic.com/firebasejs/12.18.0/firebase-auth.js"></script>
-<script src="https://www.gstatic.com/firebasejs/12.18.0/firebase-firestore.js"></script>
-
-<style>
-*{
-    margin:0;
-    padding:0;
-    box-sizing:border-box;
-    font-family:Arial,Helvetica,sans-serif;
-}
-
-:root{
-    --primary:#087f5b;
-    --primary2:#0ca678;
-    --dark:#073b2a;
-    --light:#f2fff9;
-    --white:#fff;
-    --gray:#6c757d;
-    --danger:#e03131;
-    --warning:#f08c00;
-    --shadow:0 10px 30px rgba(0,0,0,.08);
-}
-
-body{
-    background:#f6fbf8;
-    color:#17352c;
-}
-
-button,input,select{
-    font:inherit;
-}
-
-button{
-    cursor:pointer;
-}
-
-.hidden{
-    display:none!important;
-}
-
-.screen{
-    min-height:100vh;
-}
-
-/* LOGIN */
-
-.auth-screen{
-    min-height:100vh;
-    display:flex;
-    justify-content:center;
-    align-items:center;
-    padding:20px;
-    background:
-    radial-gradient(circle at top left,#b2f2d8,transparent 35%),
-    radial-gradient(circle at bottom right,#d3f9d8,transparent 35%),
-    #f5fff9;
-}
-
-.auth-box{
-    width:100%;
-    max-width:450px;
-    background:white;
-    border-radius:25px;
-    padding:35px;
-    box-shadow:var(--shadow);
-}
-
-.logo{
-    text-align:center;
-    margin-bottom:25px;
-}
-
-.logo-icon{
-    width:75px;
-    height:75px;
-    margin:auto;
-    border-radius:50%;
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    background:var(--primary);
-    color:white;
-    font-size:35px;
-}
-
-.logo h1{
-    margin-top:12px;
-    color:var(--dark);
-}
-
-.logo p{
-    color:var(--gray);
-    margin-top:5px;
-}
-
-.auth-tabs{
-    display:flex;
-    background:#eef8f3;
-    padding:5px;
-    border-radius:12px;
-    margin-bottom:22px;
-}
-
-.auth-tabs button{
-    width:50%;
-    border:0;
-    padding:12px;
-    background:transparent;
-    border-radius:9px;
-}
-
-.auth-tabs button.active{
-    background:white;
-    color:var(--primary);
-    font-weight:bold;
-    box-shadow:0 2px 10px rgba(0,0,0,.05);
-}
-
-.form-group{
-    margin-bottom:15px;
-}
-
-.form-group label{
-    display:block;
-    margin-bottom:7px;
-    font-size:14px;
-    font-weight:bold;
-}
-
-.form-group input,
-.form-group select{
-    width:100%;
-    padding:13px 14px;
-    border:1px solid #d8e5df;
-    border-radius:10px;
-    outline:none;
-}
-
-.form-group input:focus,
-.form-group select:focus{
-    border-color:var(--primary2);
-}
-
-.primary-btn{
-    width:100%;
-    border:0;
-    background:var(--primary);
-    color:white;
-    padding:14px;
-    border-radius:10px;
-    font-weight:bold;
-    margin-top:5px;
-}
-
-.primary-btn:hover{
-    background:var(--dark);
-}
-
-.auth-message{
-    margin-top:15px;
-    text-align:center;
-    font-size:14px;
-    color:var(--danger);
-}
-
-/* APP */
-
-.app{
-    min-height:100vh;
-}
-
-.navbar{
-    height:70px;
-    background:white;
-    border-bottom:1px solid #e5eee9;
-    display:flex;
-    align-items:center;
-    justify-content:space-between;
-    padding:0 25px;
-    position:sticky;
-    top:0;
-    z-index:100;
-}
-
-.nav-brand{
-    display:flex;
-    align-items:center;
-    gap:12px;
-}
-
-.nav-brand .mini-logo{
-    width:42px;
-    height:42px;
-    border-radius:50%;
-    background:var(--primary);
-    color:white;
-    display:flex;
-    align-items:center;
-    justify-content:center;
-}
-
-.nav-brand h2{
-    font-size:20px;
-    color:var(--dark);
-}
-
-.nav-right{
-    display:flex;
-    align-items:center;
-    gap:15px;
-}
-
-.user-name{
-    font-weight:bold;
-}
-
-.logout-btn{
-    border:0;
-    padding:9px 15px;
-    border-radius:8px;
-    background:#ffe3e3;
-    color:#c92a2a;
-}
-
-.layout{
-    display:flex;
-    min-height:calc(100vh - 70px);
-}
-
-.sidebar{
-    width:245px;
-    background:var(--dark);
-    padding:20px 12px;
-    color:white;
-}
-
-.sidebar button{
-    display:block;
-    width:100%;
-    text-align:left;
-    border:0;
-    background:transparent;
-    color:#d9f8eb;
-    padding:13px 15px;
-    margin-bottom:5px;
-    border-radius:9px;
-}
-
-.sidebar button:hover,
-.sidebar button.active{
-    background:var(--primary);
-    color:white;
-}
-
-.content{
-    flex:1;
-    padding:28px;
-    overflow:hidden;
-}
-
-.page-title{
-    margin-bottom:22px;
-}
-
-.page-title h1{
-    font-size:28px;
-    color:var(--dark);
-}
-
-.page-title p{
-    color:var(--gray);
-    margin-top:5px;
-}
-
-/* CARDS */
-
-.stats{
-    display:grid;
-    grid-template-columns:repeat(4,1fr);
-    gap:18px;
-    margin-bottom:25px;
-}
-
-.stat-card{
-    background:white;
-    padding:22px;
-    border-radius:16px;
-    box-shadow:var(--shadow);
-}
-
-.stat-card .icon{
-    font-size:28px;
-    margin-bottom:10px;
-}
-
-.stat-card h3{
-    font-size:26px;
-    color:var(--dark);
-}
-
-.stat-card p{
-    color:var(--gray);
-    margin-top:4px;
-}
-
-.grid{
-    display:grid;
-    grid-template-columns:repeat(2,1fr);
-    gap:20px;
-}
-
-.card{
-    background:white;
-    border-radius:17px;
-    padding:22px;
-    box-shadow:var(--shadow);
-    margin-bottom:20px;
-}
-
-.card h2{
-    color:var(--dark);
-    margin-bottom:18px;
-}
-
-.card h3{
-    margin-bottom:10px;
-}
-
-.info-row{
-    display:flex;
-    justify-content:space-between;
-    padding:11px 0;
-    border-bottom:1px solid #edf2ef;
-}
-
-.info-row:last-child{
-    border-bottom:0;
-}
-
-.badge{
-    display:inline-block;
-    padding:5px 10px;
-    border-radius:20px;
-    font-size:12px;
-    font-weight:bold;
-}
-
-.badge.green{
-    background:#d3f9d8;
-    color:#2b8a3e;
-}
-
-.badge.orange{
-    background:#fff3bf;
-    color:#e67700;
-}
-
-.badge.red{
-    background:#ffe3e3;
-    color:#c92a2a;
-}
-
-.badge.blue{
-    background:#d0ebff;
-    color:#1971c2;
-}
-
-/* TABLE */
-
-.table-wrap{
-    overflow-x:auto;
-}
-
-table{
-    width:100%;
-    border-collapse:collapse;
-}
-
-th,td{
-    padding:13px;
-    text-align:left;
-    border-bottom:1px solid #e9efec;
-    white-space:nowrap;
-}
-
-th{
-    background:#f0f8f4;
-    color:var(--dark);
-}
-
-.action-btn{
-    border:0;
-    padding:7px 11px;
-    border-radius:7px;
-    margin-right:4px;
-}
-
-.edit{
-    background:#d0ebff;
-    color:#1864ab;
-}
-
-.delete{
-    background:#ffe3e3;
-    color:#c92a2a;
-}
-
-.success{
-    background:#d3f9d8;
-    color:#2b8a3e;
-}
-
-.warning{
-    background:#fff3bf;
-    color:#e67700;
-}
-
-/* SUBSCRIPTION */
-
-.product-grid{
-    display:grid;
-    grid-template-columns:repeat(2,1fr);
-    gap:15px;
-}
-
-.product-option{
-    border:2px solid #e5eee9;
-    padding:18px;
-    border-radius:14px;
-    cursor:pointer;
-}
-
-.product-option.selected{
-    border-color:var(--primary);
-    background:#effcf6;
-}
-
-.product-option h3{
-    margin-bottom:7px;
-}
-
-.product-option p{
-    color:var(--gray);
-}
-
-/* BILL */
-
-.bill{
-    border:1px dashed #b7c9c0;
-    border-radius:14px;
-    padding:20px;
-    background:#fbfffd;
-}
-
-.bill-total{
-    font-size:30px;
-    font-weight:bold;
-    color:var(--primary);
-}
-
-/* TOAST */
-
-.toast{
-    position:fixed;
-    right:20px;
-    bottom:20px;
-    background:#073b2a;
-    color:white;
-    padding:14px 18px;
-    border-radius:10px;
-    box-shadow:var(--shadow);
-    z-index:999;
-    transform:translateY(100px);
-    opacity:0;
-    transition:.3s;
-}
-
-.toast.show{
-    transform:translateY(0);
-    opacity:1;
-}
-
-/* MOBILE */
-
-.mobile-menu{
-    display:none;
-    border:0;
-    background:transparent;
-    font-size:25px;
-}
-
-@media(max-width:1000px){
-    .stats{
-        grid-template-columns:repeat(2,1fr);
-    }
-}
-
-@media(max-width:750px){
-    .sidebar{
-        position:fixed;
-        left:-260px;
-        top:70px;
-        bottom:0;
-        z-index:200;
-        transition:.3s;
-    }
-
-    .sidebar.open{
-        left:0;
-    }
-
-    .mobile-menu{
-        display:block;
-    }
-
-    .nav-brand h2{
-        font-size:16px;
-    }
-
-    .user-name{
-        display:none;
-    }
-
-    .content{
-        padding:18px;
-    }
-
-    .stats{
-        grid-template-columns:1fr;
-    }
-
-    .grid,
-    .product-grid{
-        grid-template-columns:1fr;
-    }
-
-    .auth-box{
-        padding:25px;
-    }
-}
-</style>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Khodaamba Milk Dairy</title>
+
+    <script src="https://www.gstatic.com/firebasejs/12.18.0/firebase-app.js">
+    </script>
+    <script src="https://www.gstatic.com/firebasejs/12.18.0/firebase-auth.js">
+    </script>
+    <script src="https://www.gstatic.com/firebasejs/12.18.0/firebase-firestore.js">
+    </script>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, Helvetica, sans-serif;
+        }
+
+        :root {
+            --primary: #087f5b;
+            --primary2: #0ca678;
+            --dark: #073b2a;
+            --light: #f2fff9;
+            --white: #fff;
+            --gray: #6c757d;
+            --danger: #e03131;
+            --warning: #f08c00;
+            --shadow: 0 10px 30px rgba(0, 0, 0, .08);
+        }
+
+        body {
+            background: #f6fbf8;
+            color: #17352c;
+        }
+
+        button,
+        input,
+        select {
+            font: inherit;
+        }
+
+        button {
+            cursor: pointer;
+        }
+
+        .hidden {
+            display: none !important;
+        }
+
+        .screen {
+            min-height: 100vh;
+        }
+
+        /* LOGIN */
+        .auth-screen {
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            background:
+                radial-gradient(circle at top left, #b2f2d8, transparent 35%),
+                radial-gradient(circle at bottom right, #d3f9d8, transparent 35%),
+                #f5fff9;
+        }
+
+        .auth-box {
+            width: 100%;
+            max-width: 450px;
+            background: white;
+            border-radius: 25px;
+            padding: 35px;
+            box-shadow: var(--shadow);
+        }
+
+        .logo {
+            text-align: center;
+            margin-bottom: 25px;
+        }
+
+        .logo-icon {
+            width: 75px;
+            height: 75px;
+            margin: auto;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: var(--primary);
+            color: white;
+            font-size: 35px;
+        }
+
+        .logo h1 {
+            margin-top: 12px;
+            color: var(--dark);
+        }
+
+        .logo p {
+            color: var(--gray);
+            margin-top: 5px;
+        }
+
+        .auth-tabs {
+            display: flex;
+            background: #eef8f3;
+            padding: 5px;
+            border-radius: 12px;
+            margin-bottom: 22px;
+        }
+
+        .auth-tabs button {
+            width: 50%;
+            border: 0;
+            padding: 12px;
+            background: transparent;
+            border-radius: 9px;
+        }
+
+        .auth-tabs button.active {
+            background: white;
+            color: var(--primary);
+            font-weight: bold;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, .05);
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 7px;
+            font-size: 14px;
+            font-weight: bold;
+        }
+
+        .form-group input,
+        .form-group select {
+            width: 100%;
+            padding: 13px 14px;
+            border: 1px solid #d8e5df;
+            border-radius: 10px;
+            outline: none;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus {
+            border-color: var(--primary2);
+        }
+
+        .primary-btn {
+            width: 100%;
+            border: 0;
+            background: var(--primary);
+            color: white;
+            padding: 14px;
+            border-radius: 10px;
+            font-weight: bold;
+            margin-top: 5px;
+        }
+
+        .primary-btn:hover {
+            background: var(--dark);
+        }
+
+        .auth-message {
+            margin-top: 15px;
+            text-align: center;
+            font-size: 14px;
+            color: var(--danger);
+        }
+
+        /* APP */
+        .app {
+            min-height: 100vh;
+        }
+
+        .navbar {
+            height: 70px;
+            background: white;
+            border-bottom: 1px solid #e5eee9;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 25px;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .nav-brand {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .nav-brand .mini-logo {
+            width: 42px;
+            height: 42px;
+            border-radius: 50%;
+            background: var(--primary);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .nav-brand h2 {
+            font-size: 20px;
+            color: var(--dark);
+        }
+
+        .nav-right {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .user-name {
+            font-weight: bold;
+        }
+
+        .logout-btn {
+            border: 0;
+            padding: 9px 15px;
+            border-radius: 8px;
+            background: #ffe3e3;
+            color: #c92a2a;
+        }
+
+        .layout {
+            display: flex;
+            min-height: calc(100vh - 70px);
+        }
+
+        .sidebar {
+            width: 245px;
+            background: var(--dark);
+            padding: 20px 12px;
+            color: white;
+        }
+
+        .sidebar button {
+            display: block;
+            width: 100%;
+            text-align: left;
+            border: 0;
+            background: transparent;
+            color: #d9f8eb;
+            padding: 13px 15px;
+            margin-bottom: 5px;
+            border-radius: 9px;
+        }
+
+        .sidebar button:hover,
+        .sidebar button.active {
+            background: var(--primary);
+            color: white;
+        }
+
+        .content {
+            flex: 1;
+            padding: 28px;
+            overflow: hidden;
+        }
+
+        .page-title {
+            margin-bottom: 22px;
+        }
+
+        .page-title h1 {
+            font-size: 28px;
+            color: var(--dark);
+        }
+
+        .page-title p {
+            color: var(--gray);
+            margin-top: 5px;
+        }
+
+        /* CARDS */
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 18px;
+            margin-bottom: 25px;
+        }
+
+        .stat-card {
+            background: white;
+            padding: 22px;
+            border-radius: 16px;
+            box-shadow: var(--shadow);
+        }
+
+        .stat-card .icon {
+            font-size: 28px;
+            margin-bottom: 10px;
+        }
+
+        .stat-card h3 {
+            font-size: 26px;
+            color: var(--dark);
+        }
+
+        .stat-card p {
+            color: var(--gray);
+            margin-top: 4px;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 20px;
+        }
+
+        .card {
+            background: white;
+            border-radius: 17px;
+            padding: 22px;
+            box-shadow: var(--shadow);
+            margin-bottom: 20px;
+        }
+
+        .card h2 {
+            color: var(--dark);
+            margin-bottom: 18px;
+        }
+
+        .card h3 {
+            margin-bottom: 10px;
+        }
+
+        .info-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 11px 0;
+            border-bottom: 1px solid #edf2ef;
+        }
+
+        .info-row:last-child {
+            border-bottom: 0;
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 5px 10px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: bold;
+        }
+
+        .badge.green {
+            background: #d3f9d8;
+            color: #2b8a3e;
+        }
+
+        .badge.orange {
+            background: #fff3bf;
+            color: #e67700;
+        }
+
+        .badge.red {
+            background: #ffe3e3;
+            color: #c92a2a;
+        }
+
+        .badge.blue {
+            background: #d0ebff;
+            color: #1971c2;
+        }
+
+        /* TABLE */
+        .table-wrap {
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th,
+        td {
+            padding: 13px;
+            text-align: left;
+            border-bottom: 1px solid #e9efec;
+            white-space: nowrap;
+        }
+
+        th {
+            background: #f0f8f4;
+            color: var(--dark);
+        }
+
+        .action-btn {
+            border: 0;
+            padding: 7px 11px;
+            border-radius: 7px;
+            margin-right: 4px;
+        }
+
+        .edit {
+            background: #d0ebff;
+            color: #1864ab;
+        }
+
+        .delete {
+            background: #ffe3e3;
+            color: #c92a2a;
+        }
+
+        .success {
+            background: #d3f9d8;
+            color: #2b8a3e;
+        }
+
+        .warning {
+            background: #fff3bf;
+            color: #e67700;
+        }
+
+        /* SUBSCRIPTION */
+        .product-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+        }
+
+        .product-option {
+            border: 2px solid #e5eee9;
+            padding: 18px;
+            border-radius: 14px;
+            cursor: pointer;
+        }
+
+        .product-option.selected {
+            border-color: var(--primary);
+            background: #effcf6;
+        }
+
+        .product-option h3 {
+            margin-bottom: 7px;
+        }
+
+        .product-option p {
+            color: var(--gray);
+        }
+
+        /* BILL */
+        .bill {
+            border: 1px dashed #b7c9c0;
+            border-radius: 14px;
+            padding: 20px;
+            background: #fbfffd;
+        }
+
+        .bill-total {
+            font-size: 30px;
+            font-weight: bold;
+            color: var(--primary);
+        }
+
+        /* TOAST */
+        .toast {
+            position: fixed;
+            right: 20px;
+            bottom: 20px;
+            background: #073b2a;
+            color: white;
+            padding: 14px 18px;
+            border-radius: 10px;
+            box-shadow: var(--shadow);
+            z-index: 999;
+            transform: translateY(100px);
+            opacity: 0;
+            transition: .3s;
+        }
+
+        .toast.show {
+            transform: translateY(0);
+            opacity: 1;
+        }
+
+        /* MOBILE */
+        .mobile-menu {
+            display: none;
+            border: 0;
+            background: transparent;
+            font-size: 25px;
+        }
+
+        @media(max-width:1000px) {
+            .stats {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media(max-width:750px) {
+            .sidebar {
+                position: fixed;
+                left: -260px;
+                top: 70px;
+                bottom: 0;
+                z-index: 200;
+                transition: .3s;
+            }
+
+            .sidebar.open {
+                left: 0;
+            }
+
+            .mobile-menu {
+                display: block;
+            }
+
+            .nav-brand h2 {
+                font-size: 16px;
+            }
+
+            .user-name {
+                display: none;
+            }
+
+            .content {
+                padding: 18px;
+            }
+
+            .stats {
+                grid-template-columns: 1fr;
+            }
+
+            .grid,
+            .product-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .auth-box {
+                padding: 25px;
+            }
+        }
+    </style>
 </head>
 
 <body>
 
-<!-- AUTH SCREEN -->
+    <!-- AUTH SCREEN -->
 
-<div id="authScreen" class="auth-screen">
-    <div class="auth-box">
+    <div id="authScreen" class="auth-screen">
+        <div class="auth-box">
 
-        <div class="logo">
-            <div class="logo-icon">🥛</div>
-            <h1>Khodaamba Milk Dairy</h1>
-            <p>Fresh Milk • Fresh Life</p>
+            <div class="logo">
+                <div class="logo-icon">🥛</div>
+                <h1>Khodaamba Milk Dairy</h1>
+                <p>Fresh Milk • Fresh Life</p>
+            </div>
+
+            <div class="auth-tabs">
+                <button id="loginTab" class="active" onclick="showLogin()">Login</button>
+                <button id="registerTab" onclick="showRegister()">Register</button>
+            </div>
+
+            <div id="loginForm">
+
+                <div class="form-group">
+                    <label>Email</label>
+                    <input id="loginEmail" type="email" placeholder="Enter email">
+                </div>
+
+                <div class="form-group">
+                    <label>Password</label>
+                    <input id="loginPassword" type="password" placeholder="Enter password">
+                </div>
+
+                <button class="primary-btn" onclick="loginUser()">Login</button>
+
+            </div>
+
+            <div id="registerForm" class="hidden">
+
+                <div class="form-group">
+                    <label>Full Name</label>
+                    <input id="regName" type="text" placeholder="Enter your name">
+                </div>
+
+                <div class="form-group">
+                    <label>Mobile</label>
+                    <input id="regPhone" type="tel" placeholder="Enter mobile number">
+                </div>
+
+                <div class="form-group">
+                    <label>Email</label>
+                    <input id="regEmail" type="email" placeholder="Enter email">
+                </div>
+
+                <div class="form-group">
+                    <label>Password</label>
+                    <input id="regPassword" type="password" placeholder="Minimum 6 characters">
+                </div>
+
+                <div class="form-group">
+                    <label>Address</label>
+                    <input id="regAddress" type="text" placeholder="Delivery address">
+                </div>
+
+                <button class="primary-btn" onclick="registerUser()">Create Account</button>
+
+            </div>
+
+            <div id="authMessage" class="auth-message"></div>
+
         </div>
-
-        <div class="auth-tabs">
-            <button id="loginTab" class="active" onclick="showLogin()">Login</button>
-            <button id="registerTab" onclick="showRegister()">Register</button>
-        </div>
-
-        <div id="loginForm">
-
-            <div class="form-group">
-                <label>Email</label>
-                <input id="loginEmail" type="email" placeholder="Enter email">
-            </div>
-
-            <div class="form-group">
-                <label>Password</label>
-                <input id="loginPassword" type="password" placeholder="Enter password">
-            </div>
-
-            <button class="primary-btn" onclick="loginUser()">Login</button>
-
-        </div>
-
-        <div id="registerForm" class="hidden">
-
-            <div class="form-group">
-                <label>Full Name</label>
-                <input id="regName" type="text" placeholder="Enter your name">
-            </div>
-
-            <div class="form-group">
-                <label>Mobile</label>
-                <input id="regPhone" type="tel" placeholder="Enter mobile number">
-            </div>
-
-            <div class="form-group">
-                <label>Email</label>
-                <input id="regEmail" type="email" placeholder="Enter email">
-            </div>
-
-            <div class="form-group">
-                <label>Password</label>
-                <input id="regPassword" type="password" placeholder="Minimum 6 characters">
-            </div>
-
-            <div class="form-group">
-                <label>Address</label>
-                <input id="regAddress" type="text" placeholder="Delivery address">
-            </div>
-
-            <button class="primary-btn" onclick="registerUser()">Create Account</button>
-
-        </div>
-
-        <div id="authMessage" class="auth-message"></div>
-
-    </div>
-</div>
-
-
-<!-- MAIN APPLICATION -->
-
-<div id="app" class="app hidden">
-
-    <div class="navbar">
-
-        <div class="nav-brand">
-            <button class="mobile-menu" onclick="toggleSidebar()">☰</button>
-
-            <div class="mini-logo">🥛</div>
-
-            <h2>Khodaamba Milk Dairy</h2>
-        </div>
-
-        <div class="nav-right">
-            <span id="navUser" class="user-name"></span>
-            <button class="logout-btn" onclick="logoutUser()">Logout</button>
-        </div>
-
     </div>
 
-    <div class="layout">
 
-        <aside id="sidebar" class="sidebar">
+    <!-- MAIN APPLICATION -->
 
-            <button id="dashboardNav" class="active" onclick="openPage('dashboard')">
-                🏠 Dashboard
-            </button>
+    <div id="app" class="app hidden">
 
-            <button onclick="openPage('subscription')">
-                🥛 My Subscription
-            </button>
+        <div class="navbar">
 
-            <button onclick="openPage('billing')">
-                💰 My Bills
-            </button>
+            <div class="nav-brand">
+                <button class="mobile-menu" onclick="toggleSidebar()">☰</button>
 
-            <button onclick="openPage('delivery')">
-                🚚 Delivery
-            </button>
+                <div class="mini-logo">🥛</div>
 
-            <button onclick="openPage('profile')">
-                👤 Profile
-            </button>
+                <h2>Khodaamba Milk Dairy</h2>
+            </div>
 
-            <button id="adminNav" class="hidden" onclick="openPage('admin')">
-                ⚙️ Admin Panel
-            </button>
+            <div class="nav-right">
+                <span id="navUser" class="user-name"></span>
+                <button class="logout-btn" onclick="logoutUser()">Logout</button>
+            </div>
 
-        </aside>
+        </div>
 
-        <main class="content">
+        <div class="layout">
 
-            <!-- DASHBOARD -->
+            <aside id="sidebar" class="sidebar">
 
-            <section id="dashboardPage">
+                <button id="dashboardNav" class="active" onclick="openPage('dashboard')">
+                    🏠 Dashboard
+                </button>
 
-                <div class="page-title">
-                    <h1 id="welcomeTitle">Dashboard</h1>
-                    <p>Manage your milk subscription easily.</p>
-                </div>
+                <button onclick="openPage('subscription')">
+                    🥛 My Subscription
+                </button>
 
-                <div class="stats">
+                <button onclick="openPage('billing')">
+                    💰 My Bills
+                </button>
 
-                    <div class="stat-card">
-                        <div class="icon">🥛</div>
-                        <h3 id="dashMilk">0 L</h3>
-                        <p>Daily Milk</p>
+                <button onclick="openPage('delivery')">
+                    🚚 Delivery
+                </button>
+
+                <button onclick="openPage('profile')">
+                    👤 Profile
+                </button>
+
+                <button id="adminNav" class="hidden" onclick="openPage('admin')">
+                    ⚙️ Admin Panel
+                </button>
+
+            </aside>
+
+            <main class="content">
+
+                <!-- DASHBOARD -->
+
+                <section id="dashboardPage">
+
+                    <div class="page-title">
+                        <h1 id="welcomeTitle">Dashboard</h1>
+                        <p>Manage your milk subscription easily.</p>
                     </div>
 
-                    <div class="stat-card">
-                        <div class="icon">📅</div>
-                        <h3 id="dashDays">0</h3>
-                        <p>Delivery Days</p>
+                    <div class="stats">
+
+                        <div class="stat-card">
+                            <div class="icon">🥛</div>
+                            <h3 id="dashMilk">0 L</h3>
+                            <p>Daily Milk</p>
+                        </div>
+
+                        <div class="stat-card">
+                            <div class="icon">📅</div>
+                            <h3 id="dashDays">0</h3>
+                            <p>Delivery Days</p>
+                        </div>
+
+                        <div class="stat-card">
+                            <div class="icon">💰</div>
+                            <h3 id="dashBill">₹0</h3>
+                            <p>Estimated Monthly Bill</p>
+                        </div>
+
+                        <div class="stat-card">
+                            <div class="icon">🚚</div>
+                            <h3 id="dashDelivery">Pending</h3>
+                            <p>Today's Delivery</p>
+                        </div>
+
                     </div>
 
-                    <div class="stat-card">
-                        <div class="icon">💰</div>
-                        <h3 id="dashBill">₹0</h3>
-                        <p>Estimated Monthly Bill</p>
+                    <div class="grid">
+
+                        <div class="card">
+                            <h2>Current Subscription</h2>
+
+                            <div id="currentSubscription">
+                                No active subscription.
+                            </div>
+
+                        </div>
+
+                        <div class="card">
+
+                            <h2>Quick Actions</h2>
+
+                            <button class="primary-btn" onclick="openPage('subscription')">
+                                Manage Subscription
+                            </button>
+
+                            <br><br>
+
+                            <button class="primary-btn" onclick="openPage('billing')">
+                                View Monthly Bill
+                            </button>
+
+                        </div>
+
                     </div>
 
-                    <div class="stat-card">
-                        <div class="icon">🚚</div>
-                        <h3 id="dashDelivery">Pending</h3>
-                        <p>Today's Delivery</p>
+                </section>
+
+
+                <!-- SUBSCRIPTION -->
+
+                <section id="subscriptionPage" class="hidden">
+
+                    <div class="page-title">
+                        <h1>My Subscription</h1>
+                        <p>Choose your milk and daily quantity.</p>
                     </div>
-
-                </div>
-
-                <div class="grid">
 
                     <div class="card">
-                        <h2>Current Subscription</h2>
 
-                        <div id="currentSubscription">
-                            No active subscription.
+                        <h2>Milk Type</h2>
+
+                        <div class="product-grid">
+
+                            <div id="cowOption" class="product-option selected" onclick="selectMilk('Cow')">
+
+                                <h3>🐄 Cow Milk</h3>
+                                <p>Fresh cow milk</p>
+                                <strong id="cowRateText">₹60 / L</strong>
+
+                            </div>
+
+                            <div id="buffaloOption" class="product-option" onclick="selectMilk('Buffalo')">
+
+                                <h3>🐃 Buffalo Milk</h3>
+                                <p>Fresh buffalo milk</p>
+                                <strong id="buffaloRateText">₹70 / L</strong>
+
+                            </div>
+
+                        </div>
+
+                        <br>
+
+                        <div class="form-group">
+                            <label>Daily Quantity (Litres)</label>
+
+                            <select id="quantity">
+                                <option value="0.5">0.5 L</option>
+                                <option value="1">1 L</option>
+                                <option value="1.5">1.5 L</option>
+                                <option value="2">2 L</option>
+                                <option value="2.5">2.5 L</option>
+                                <option value="3">3 L</option>
+                                <option value="4">4 L</option>
+                                <option value="5">5 L</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Delivery Days</label>
+
+                            <select id="deliveryDays">
+                                <option value="7">7 Days</option>
+                                <option value="15">15 Days</option>
+                                <option value="30" selected>30 Days</option>
+                            </select>
+                        </div>
+
+                        <div class="bill">
+
+                            <h3>Estimated Bill</h3>
+
+                            <p>Daily: <strong id="previewDaily">₹60</strong></p>
+
+                            <p>Monthly/Selected Period:</p>
+
+                            <div id="previewTotal" class="bill-total">
+                                ₹1800
+                            </div>
+
+                        </div>
+
+                        <br>
+
+                        <button class="primary-btn" onclick="saveSubscription()">
+                            Save Subscription
+                        </button>
+
+                    </div>
+
+                </section>
+
+
+                <!-- BILLING -->
+
+                <section id="billingPage" class="hidden">
+
+                    <div class="page-title">
+                        <h1>My Bills</h1>
+                        <p>Automatically calculated milk bills.</p>
+                    </div>
+
+                    <div class="card">
+
+                        <h2>Current Bill</h2>
+
+                        <div id="customerBill">
+                            Loading...
                         </div>
 
                     </div>
 
                     <div class="card">
 
-                        <h2>Quick Actions</h2>
-
-                        <button class="primary-btn" onclick="openPage('subscription')">
-                            Manage Subscription
-                        </button>
-
-                        <br><br>
-
-                        <button class="primary-btn" onclick="openPage('billing')">
-                            View Monthly Bill
-                        </button>
-
-                    </div>
-
-                </div>
-
-            </section>
-
-
-            <!-- SUBSCRIPTION -->
-
-            <section id="subscriptionPage" class="hidden">
-
-                <div class="page-title">
-                    <h1>My Subscription</h1>
-                    <p>Choose your milk and daily quantity.</p>
-                </div>
-
-                <div class="card">
-
-                    <h2>Milk Type</h2>
-
-                    <div class="product-grid">
-
-                        <div id="cowOption"
-                             class="product-option selected"
-                             onclick="selectMilk('Cow')">
-
-                            <h3>🐄 Cow Milk</h3>
-                            <p>Fresh cow milk</p>
-                            <strong id="cowRateText">₹60 / L</strong>
-
-                        </div>
-
-                        <div id="buffaloOption"
-                             class="product-option"
-                             onclick="selectMilk('Buffalo')">
-
-                            <h3>🐃 Buffalo Milk</h3>
-                            <p>Fresh buffalo milk</p>
-                            <strong id="buffaloRateText">₹70 / L</strong>
-
-                        </div>
-
-                    </div>
-
-                    <br>
-
-                    <div class="form-group">
-                        <label>Daily Quantity (Litres)</label>
-
-                        <select id="quantity">
-                            <option value="0.5">0.5 L</option>
-                            <option value="1">1 L</option>
-                            <option value="1.5">1.5 L</option>
-                            <option value="2">2 L</option>
-                            <option value="2.5">2.5 L</option>
-                            <option value="3">3 L</option>
-                            <option value="4">4 L</option>
-                            <option value="5">5 L</option>
-                        </select>
-                    </div>
-
-                    <div class="form-group">
-                        <label>Delivery Days</label>
-
-                        <select id="deliveryDays">
-                            <option value="7">7 Days</option>
-                            <option value="15">15 Days</option>
-                            <option value="30" selected>30 Days</option>
-                        </select>
-                    </div>
-
-                    <div class="bill">
-
-                        <h3>Estimated Bill</h3>
-
-                        <p>Daily: <strong id="previewDaily">₹60</strong></p>
-
-                        <p>Monthly/Selected Period:</p>
-
-                        <div id="previewTotal" class="bill-total">
-                            ₹1800
-                        </div>
-
-                    </div>
-
-                    <br>
-
-                    <button class="primary-btn" onclick="saveSubscription()">
-                        Save Subscription
-                    </button>
-
-                </div>
-
-            </section>
-
-
-            <!-- BILLING -->
-
-            <section id="billingPage" class="hidden">
-
-                <div class="page-title">
-                    <h1>My Bills</h1>
-                    <p>Automatically calculated milk bills.</p>
-                </div>
-
-                <div class="card">
-
-                    <h2>Current Bill</h2>
-
-                    <div id="customerBill">
-                        Loading...
-                    </div>
-
-                </div>
-
-                <div class="card">
-
-                    <h2>Billing Information</h2>
-
-                    <div class="info-row">
-                        <span>Billing Cycle</span>
-                        <strong>Monthly</strong>
-                    </div>
-
-                    <div class="info-row">
-                        <span>Payment Status</span>
-                        <span id="customerPaymentStatus" class="badge orange">
-                            Pending
-                        </span>
-                    </div>
-
-                </div>
-
-            </section>
-
-
-            <!-- DELIVERY -->
-
-            <section id="deliveryPage" class="hidden">
-
-                <div class="page-title">
-                    <h1>Delivery Tracking</h1>
-                    <p>Check your milk delivery status.</p>
-                </div>
-
-                <div class="card">
-
-                    <h2>Today's Delivery</h2>
-
-                    <div id="deliveryStatusBox">
+                        <h2>Billing Information</h2>
 
                         <div class="info-row">
-                            <span>Milk</span>
-                            <strong id="deliveryMilk">-</strong>
+                            <span>Billing Cycle</span>
+                            <strong>Monthly</strong>
                         </div>
 
                         <div class="info-row">
-                            <span>Quantity</span>
-                            <strong id="deliveryQuantity">-</strong>
-                        </div>
-
-                        <div class="info-row">
-                            <span>Status</span>
-                            <span id="deliveryStatus" class="badge orange">
+                            <span>Payment Status</span>
+                            <span id="customerPaymentStatus" class="badge orange">
                                 Pending
                             </span>
                         </div>
 
                     </div>
 
-                </div>
-
-            </section>
+                </section>
 
 
-            <!-- PROFILE -->
+                <!-- DELIVERY -->
 
-            <section id="profilePage" class="hidden">
+                <section id="deliveryPage" class="hidden">
 
-                <div class="page-title">
-                    <h1>My Profile</h1>
-                    <p>Manage your account information.</p>
-                </div>
-
-                <div class="card">
-
-                    <div class="form-group">
-                        <label>Name</label>
-                        <input id="profileName">
+                    <div class="page-title">
+                        <h1>Delivery Tracking</h1>
+                        <p>Check your milk delivery status.</p>
                     </div>
 
-                    <div class="form-group">
-                        <label>Mobile</label>
-                        <input id="profilePhone">
-                    </div>
+                    <div class="card">
 
-                    <div class="form-group">
-                        <label>Address</label>
-                        <input id="profileAddress">
-                    </div>
+                        <h2>Today's Delivery</h2>
 
-                    <button class="primary-btn" onclick="updateProfile()">
-                        Update Profile
-                    </button>
+                        <div id="deliveryStatusBox">
 
-                </div>
+                            <div class="info-row">
+                                <span>Milk</span>
+                                <strong id="deliveryMilk">-</strong>
+                            </div>
 
-            </section>
+                            <div class="info-row">
+                                <span>Quantity</span>
+                                <strong id="deliveryQuantity">-</strong>
+                            </div>
 
+                            <div class="info-row">
+                                <span>Status</span>
+                                <span id="deliveryStatus" class="badge orange">
+                                    Pending
+                                </span>
+                            </div>
 
-            <!-- ADMIN -->
-
-            <section id="adminPage" class="hidden">
-
-                <div class="page-title">
-                    <h1>Admin Dashboard</h1>
-                    <p>Manage Khodaamba Milk Dairy.</p>
-                </div>
-
-                <div class="stats">
-
-                    <div class="stat-card">
-                        <div class="icon">👥</div>
-                        <h3 id="adminCustomers">0</h3>
-                        <p>Total Customers</p>
-                    </div>
-
-                    <div class="stat-card">
-                        <div class="icon">🥛</div>
-                        <h3 id="adminLitres">0 L</h3>
-                        <p>Total Daily Milk</p>
-                    </div>
-
-                    <div class="stat-card">
-                        <div class="icon">💰</div>
-                        <h3 id="adminRevenue">₹0</h3>
-                        <p>Estimated Revenue</p>
-                    </div>
-
-                    <div class="stat-card">
-                        <div class="icon">🚚</div>
-                        <h3 id="adminDeliveries">0</h3>
-                        <p>Active Deliveries</p>
-                    </div>
-
-                </div>
-
-
-                <div class="card">
-
-                    <h2>Milk Rates</h2>
-
-                    <div class="grid">
-
-                        <div class="form-group">
-                            <label>Cow Milk Rate / Litre</label>
-                            <input id="cowRate" type="number">
-                        </div>
-
-                        <div class="form-group">
-                            <label>Buffalo Milk Rate / Litre</label>
-                            <input id="buffaloRate" type="number">
                         </div>
 
                     </div>
 
-                    <button class="primary-btn" onclick="updateRates()">
-                        Update Milk Rates
-                    </button>
-
-                </div>
+                </section>
 
 
-                <div class="card">
+                <!-- PROFILE -->
 
-                    <h2>Customer Management</h2>
+                <section id="profilePage" class="hidden">
 
-                    <div class="form-group">
-                        <input id="customerSearch"
-                               placeholder="Search customer..."
-                               oninput="filterCustomers()">
+                    <div class="page-title">
+                        <h1>My Profile</h1>
+                        <p>Manage your account information.</p>
                     </div>
 
-                    <div class="table-wrap">
+                    <div class="card">
 
-                        <table>
+                        <div class="form-group">
+                            <label>Name</label>
+                            <input id="profileName">
+                        </div>
 
-                            <thead>
-                                <tr>
-                                    <th>Name</th>
-                                    <th>Mobile</th>
-                                    <th>Milk</th>
-                                    <th>Quantity</th>
-                                    <th>Days</th>
-                                    <th>Bill</th>
-                                    <th>Payment</th>
-                                    <th>Delivery</th>
-                                </tr>
-                            </thead>
+                        <div class="form-group">
+                            <label>Mobile</label>
+                            <input id="profilePhone">
+                        </div>
 
-                            <tbody id="customersTable"></tbody>
+                        <div class="form-group">
+                            <label>Address</label>
+                            <input id="profileAddress">
+                        </div>
 
-                        </table>
+                        <button class="primary-btn" onclick="updateProfile()">
+                            Update Profile
+                        </button>
 
                     </div>
 
-                </div>
+                </section>
 
-            </section>
 
-        </main>
+                <!-- ADMIN -->
+
+                <section id="adminPage" class="hidden">
+
+                    <div class="page-title">
+                        <h1>Admin Dashboard</h1>
+                        <p>Manage Khodaamba Milk Dairy.</p>
+                    </div>
+
+                    <div class="stats">
+
+                        <div class="stat-card">
+                            <div class="icon">👥</div>
+                            <h3 id="adminCustomers">0</h3>
+                            <p>Total Customers</p>
+                        </div>
+
+                        <div class="stat-card">
+                            <div class="icon">🥛</div>
+                            <h3 id="adminLitres">0 L</h3>
+                            <p>Total Daily Milk</p>
+                        </div>
+
+                        <div class="stat-card">
+                            <div class="icon">💰</div>
+                            <h3 id="adminRevenue">₹0</h3>
+                            <p>Estimated Revenue</p>
+                        </div>
+
+                        <div class="stat-card">
+                            <div class="icon">🚚</div>
+                            <h3 id="adminDeliveries">0</h3>
+                            <p>Active Deliveries</p>
+                        </div>
+
+                    </div>
+
+
+                    <div class="card">
+
+                        <h2>Milk Rates</h2>
+
+                        <div class="grid">
+
+                            <div class="form-group">
+                                <label>Cow Milk Rate / Litre</label>
+                                <input id="cowRate" type="number">
+                            </div>
+
+                            <div class="form-group">
+                                <label>Buffalo Milk Rate / Litre</label>
+                                <input id="buffaloRate" type="number">
+                            </div>
+
+                        </div>
+
+                        <button class="primary-btn" onclick="updateRates()">
+                            Update Milk Rates
+                        </button>
+
+                    </div>
+
+
+                    <div class="card">
+
+                        <h2>Customer Management</h2>
+
+                        <div class="form-group">
+                            <input id="customerSearch" placeholder="Search customer..." oninput="filterCustomers()">
+                        </div>
+
+                        <div class="table-wrap">
+
+                            <table>
+
+                                <thead>
+                                    <tr>
+                                        <th>Name</th>
+                                        <th>Mobile</th>
+                                        <th>Milk</th>
+                                        <th>Quantity</th>
+                                        <th>Days</th>
+                                        <th>Bill</th>
+                                        <th>Payment</th>
+                                        <th>Delivery</th>
+                                    </tr>
+                                </thead>
+
+                                <tbody id="customersTable"></tbody>
+
+                            </table>
+
+                        </div>
+
+                    </div>
+
+                </section>
+
+            </main>
+
+        </div>
 
     </div>
 
-</div>
+    <div id="toast" class="toast"></div>
+
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/12.18.0/firebase-app.js";
+
+        import {
+            getAuth,
+            createUserWithEmailAndPassword,
+            signInWithEmailAndPassword,
+            signOut,
+            onAuthStateChanged
+        } from "https://www.gstatic.com/firebasejs/12.18.0/firebase-auth.js";
+
+        import {
+            getFirestore,
+            doc,
+            setDoc,
+            getDoc,
+            updateDoc,
+            collection,
+            getDocs,
+            query,
+            where,
+            serverTimestamp
+        } from "https://www.gstatic.com/firebasejs/12.18.0/firebase-firestore.js";
+
+
+        /* =====================================================
+           FIREBASE CONFIG – Updated with your credentials
+           ===================================================== */
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyBAxkov7Yazas1RMtHbH1D5KiytmTIePUE",
+            authDomain: "khodaambadairy.firebaseapp.com",
+            projectId: "khodaambadairy",
+            storageBucket: "khodaambadairy.firebasestorage.app",
+            messagingSenderId: "806677132863",
+            appId: "1:806677132863:web:17e6c30e2a1630102c2a8a",
+            measurementId: "G-RJ8J919VZ4" // optional, kept for reference
+        };
+
+
+        /* =====================================================
+           INITIALIZE FIREBASE
+           ===================================================== */
+
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
+
+
+        /* =====================================================
+           SETTINGS
+           ===================================================== */
+
+        let currentUser = null;
+        let currentCustomer = null;
+        let selectedMilk = "Cow";
+        let rates = {
+            Cow: 60,
+            Buffalo: 70
+        };
+
+        /*
+           IMPORTANT:
+           Is email ko apne actual admin email se replace karo.
+           Example: admin@khodaambamilk.com
+        */
+        const ADMIN_EMAIL = "admin@khodaambamilk.com";
+
+
+        /* =====================================================
+           AUTH UI
+           ===================================================== */
+
+        window.showLogin = function() {
+            document.getElementById("loginForm").classList.remove("hidden");
+            document.getElementById("registerForm").classList.add("hidden");
+            document.getElementById("loginTab").classList.add("active");
+            document.getElementById("registerTab").classList.remove("active");
+        };
+
+        window.showRegister = function() {
+            document.getElementById("loginForm").classList.add("hidden");
+            document.getElementById("registerForm").classList.remove("hidden");
+            document.getElementById("loginTab").classList.remove("active");
+            document.getElementById("registerTab").classList.add("active");
+        };
+
+
+        /* =====================================================
+           REGISTER
+           ===================================================== */
+
+        window.registerUser = async function() {
+            const name = document.getElementById("regName").value.trim();
+            const phone = document.getElementById("regPhone").value.trim();
+            const email = document.getElementById("regEmail").value.trim();
+            const password = document.getElementById("regPassword").value;
+            const address = document.getElementById("regAddress").value.trim();
 
-<div id="toast" class="toast"></div>
-
-
-<script type="module">
-
-import { initializeApp }
-from "https://www.gstatic.com/firebasejs/12.18.0/firebase-app.js";
-
-import {
-    getAuth,
-    createUserWithEmailAndPassword,
-    signInWithEmailAndPassword,
-    signOut,
-    onAuthStateChanged
-}
-from "https://www.gstatic.com/firebasejs/12.18.0/firebase-auth.js";
-
-import {
-    getFirestore,
-    doc,
-    setDoc,
-    getDoc,
-    updateDoc,
-    collection,
-    getDocs,
-    query,
-    where,
-    serverTimestamp
-}
-from "https://www.gstatic.com/firebasejs/12.18.0/firebase-firestore.js";
-
-
-/* =====================================================
-   FIREBASE CONFIG
-   =====================================================
-
-   Firebase Console se apna config yahan paste karo.
-*/
-
-const firebaseConfig = {
-
-    apiKey: "YOUR_API_KEY",
-
-    authDomain: "YOUR_PROJECT.firebaseapp.com",
-
-    projectId: "YOUR_PROJECT_ID",
-
-    storageBucket: "YOUR_PROJECT.firebasestorage.app",
-
-    messagingSenderId: "YOUR_MESSAGING_SENDER_ID",
-
-    appId: "YOUR_APP_ID"
-
-};
-
-
-/* =====================================================
-   INITIALIZE FIREBASE
-   ===================================================== */
-
-const app = initializeApp(firebaseConfig);
-
-const auth = getAuth(app);
-
-const db = getFirestore(app);
-
-
-/* =====================================================
-   SETTINGS
-   ===================================================== */
-
-let currentUser = null;
-
-let currentCustomer = null;
-
-let selectedMilk = "Cow";
-
-let rates = {
-    Cow:60,
-    Buffalo:70
-};
-
-
-/*
-   IMPORTANT:
-
-   Is email ko apne actual admin email se replace karo.
-
-   Example:
-   admin@khodaambamilk.com
-*/
-
-const ADMIN_EMAIL = "admin@khodaambamilk.com";
-
-
-/* =====================================================
-   AUTH UI
-   ===================================================== */
-
-window.showLogin = function(){
-
-    document.getElementById("loginForm")
-        .classList.remove("hidden");
-
-    document.getElementById("registerForm")
-        .classList.add("hidden");
-
-    document.getElementById("loginTab")
-        .classList.add("active");
-
-    document.getElementById("registerTab")
-        .classList.remove("active");
-
-};
-
-
-window.showRegister = function(){
-
-    document.getElementById("loginForm")
-        .classList.add("hidden");
-
-    document.getElementById("registerForm")
-        .classList.remove("hidden");
-
-    document.getElementById("loginTab")
-        .classList.remove("active");
-
-    document.getElementById("registerTab")
-        .classList.add("active");
-
-};
-
-
-/* =====================================================
-   REGISTER
-   ===================================================== */
-
-window.registerUser = async function(){
-
-    const name =
-        document.getElementById("regName").value.trim();
-
-    const phone =
-        document.getElementById("regPhone").value.trim();
-
-    const email =
-        document.getElementById("regEmail").value.trim();
-
-    const password =
-        document.getElementById("regPassword").value;
-
-    const address =
-        document.getElementById("regAddress").value.trim();
-
-
-    if(!name || !phone || !email || !password || !address){
-
-        showAuthMessage("Please fill all fields.");
-
-        return;
-
-    }
-
-
-    if(password.length < 6){
-
-        showAuthMessage(
-            "Password must contain at least 6 characters."
-        );
-
-        return;
-
-    }
-
-
-    try{
-
-        const result =
-            await createUserWithEmailAndPassword(
-                auth,
-                email,
-                password
-            );
-
-
-        await setDoc(
-            doc(db,"customers",result.user.uid),
-            {
-
-                uid:result.user.uid,
-
-                name:name,
-
-                phone:phone,
-
-                email:email,
-
-                address:address,
-
-                role:email.toLowerCase() === ADMIN_EMAIL.toLowerCase()
-                    ? "admin"
-                    : "customer",
-
-                subscription:null,
-
-                paymentStatus:"Pending",
-
-                deliveryStatus:"Pending",
-
-                createdAt:serverTimestamp()
-
-            }
-        );
-
-
-        showToast("Account created successfully.");
-
-    }catch(error){
-
-        showAuthMessage(error.message);
-
-    }
-
-};
-
-
-/* =====================================================
-   LOGIN
-   ===================================================== */
-
-window.loginUser = async function(){
-
-    const email =
-        document.getElementById("loginEmail").value.trim();
-
-    const password =
-        document.getElementById("loginPassword").value;
-
-
-    if(!email || !password){
-
-        showAuthMessage("Enter email and password.");
-
-        return;
-
-    }
-
-
-    try{
-
-        await signInWithEmailAndPassword(
-            auth,
-            email,
-            password
-        );
-
-    }catch(error){
-
-        showAuthMessage(error.message);
-
-    }
-
-};
-
-
-/* =====================================================
-   AUTH STATE
-   ===================================================== */
-
-onAuthStateChanged(auth, async user => {
-
-    if(user){
-
-        currentUser = user;
-
-        document.getElementById("authScreen")
-            .classList.add("hidden");
-
-        document.getElementById("app")
-            .classList.remove("hidden");
-
-        await loadCustomer();
-
-    }else{
-
-        currentUser = null;
-
-        document.getElementById("authScreen")
-            .classList.remove("hidden");
-
-        document.getElementById("app")
-            .classList.add("hidden");
-
-    }
-
-});
-
-
-/* =====================================================
-   LOAD CUSTOMER
-   ===================================================== */
-
-async function loadCustomer(){
-
-    try{
-
-        const snap =
-            await getDoc(
-                doc(db,"customers",currentUser.uid)
-            );
-
-
-        if(!snap.exists()){
-
-            await setDoc(
-                doc(db,"customers",currentUser.uid),
-                {
-
-                    uid:currentUser.uid,
-
-                    name:currentUser.email.split("@")[0],
-
-                    email:currentUser.email,
-
-                    role:
-                        currentUser.email.toLowerCase()
-                        === ADMIN_EMAIL.toLowerCase()
-                        ? "admin"
-                        : "customer",
-
-                    subscription:null,
-
-                    paymentStatus:"Pending",
-
-                    deliveryStatus:"Pending",
-
-                    createdAt:serverTimestamp()
-
-                }
-            );
-
-
-            currentCustomer = {
-
-                name:currentUser.email.split("@")[0],
-
-                email:currentUser.email,
-
-                role:
-                    currentUser.email.toLowerCase()
-                    === ADMIN_EMAIL.toLowerCase()
-                    ? "admin"
-                    : "customer"
-
-            };
-
-        }else{
-
-            currentCustomer = snap.data();
-
-        }
-
-
-        document.getElementById("navUser").textContent =
-            currentCustomer.name || currentUser.email;
-
-
-        document.getElementById("welcomeTitle").textContent =
-            "Welcome, " +
-            (currentCustomer.name || "Customer");
-
-
-        if(
-            currentCustomer.role === "admin" ||
-            currentUser.email.toLowerCase() ===
-            ADMIN_EMAIL.toLowerCase()
-        ){
-
-            document.getElementById("adminNav")
-                .classList.remove("hidden");
-
-        }
-
-
-        await loadRates();
-
-        await loadDashboard();
-
-        loadProfile();
-
-    }catch(error){
-
-        console.error(error);
-
-        showToast("Unable to load account.");
-
-    }
-
-}
-
-
-/* =====================================================
-   RATES
-   ===================================================== */
-
-async function loadRates(){
-
-    try{
-
-        const snap =
-            await getDoc(
-                doc(db,"settings","rates")
-            );
-
-
-        if(snap.exists()){
-
-            const data = snap.data();
-
-            rates.Cow =
-                Number(data.Cow || 60);
-
-            rates.Buffalo =
-                Number(data.Buffalo || 70);
-
-        }
-
-    }catch(error){
-
-        console.log(error);
-
-    }
-
-
-    document.getElementById("cowRateText").textContent =
-        "₹" + rates.Cow + " / L";
-
-    document.getElementById("buffaloRateText").textContent =
-        "₹" + rates.Buffalo + " / L";
-
-    if(document.getElementById("cowRate"))
-        document.getElementById("cowRate").value = rates.Cow;
-
-    if(document.getElementById("buffaloRate"))
-        document.getElementById("buffaloRate").value =
-            rates.Buffalo;
-
-    calculatePreview();
-
-}
-
-
-/* =====================================================
-   SELECT MILK
-   ===================================================== */
-
-window.selectMilk = function(type){
-
-    selectedMilk = type;
-
-    document.getElementById("cowOption")
-        .classList.toggle(
-            "selected",
-            type === "Cow"
-        );
-
-    document.getElementById("buffaloOption")
-        .classList.toggle(
-            "selected",
-            type === "Buffalo"
-        );
-
-    calculatePreview();
-
-};
-
-
-/* =====================================================
-   CALCULATE BILL
-   ===================================================== */
-
-function calculatePreview(){
-
-    const quantity =
-        Number(
-            document.getElementById("quantity").value || 1
-        );
-
-    const days =
-        Number(
-            document.getElementById("deliveryDays").value || 30
-        );
-
-    const rate = rates[selectedMilk];
-
-    const daily = quantity * rate;
-
-    const total = daily * days;
-
-
-    document.getElementById("previewDaily")
-        .textContent =
-        "₹" + daily.toFixed(2);
-
-
-    document.getElementById("previewTotal")
-        .textContent =
-        "₹" + total.toFixed(2);
-
-}
-
-
-document.getElementById("quantity")
-    .addEventListener("change",calculatePreview);
-
-document.getElementById("deliveryDays")
-    .addEventListener("change",calculatePreview);
-
-
-/* =====================================================
-   SAVE SUBSCRIPTION
-   ===================================================== */
-
-window.saveSubscription = async function(){
-
-    if(!currentUser)
-        return;
-
-
-    const quantity =
-        Number(
-            document.getElementById("quantity").value
-        );
-
-    const days =
-        Number(
-            document.getElementById("deliveryDays").value
-        );
-
-    const rate =
-        rates[selectedMilk];
-
-    const total =
-        quantity * rate * days;
-
-
-    const subscription = {
-
-        milkType:selectedMilk,
-
-        quantity:quantity,
-
-        days:days,
-
-        rate:rate,
-
-        total:total,
-
-        active:true,
-
-        updatedAt:serverTimestamp()
-
-    };
-
-
-    try{
-
-        await updateDoc(
-            doc(db,"customers",currentUser.uid),
-            {
-
-                subscription:subscription,
-
-                paymentStatus:"Pending",
-
-                deliveryStatus:"Pending"
-
-            }
-        );
-
-
-        currentCustomer.subscription =
-            subscription;
-
-        currentCustomer.paymentStatus =
-            "Pending";
-
-        currentCustomer.deliveryStatus =
-            "Pending";
-
-
-        showToast(
-            "Subscription saved successfully."
-        );
-
-
-        await loadDashboard();
-
-    }catch(error){
-
-        showToast(error.message);
-
-    }
-
-};
-
-
-/* =====================================================
-   DASHBOARD
-   ===================================================== */
-
-async function loadDashboard(){
-
-    const sub =
-        currentCustomer.subscription;
-
-
-    if(!sub){
-
-        document.getElementById("dashMilk")
-            .textContent = "0 L";
-
-        document.getElementById("dashDays")
-            .textContent = "0";
-
-        document.getElementById("dashBill")
-            .textContent = "₹0";
-
-        document.getElementById("dashDelivery")
-            .textContent = "Pending";
-
-        document.getElementById("currentSubscription")
-            .innerHTML =
-            "<p>No active subscription.</p>";
-
-        return;
-
-    }
-
-
-    document.getElementById("dashMilk")
-        .textContent =
-        sub.quantity + " L";
-
-
-    document.getElementById("dashDays")
-        .textContent =
-        sub.days;
-
-
-    document.getElementById("dashBill")
-        .textContent =
-        "₹" + Number(sub.total).toFixed(2);
-
-
-    document.getElementById("dashDelivery")
-        .textContent =
-        currentCustomer.deliveryStatus || "Pending";
-
-
-    document.getElementById("currentSubscription")
-        .innerHTML = `
-
-            <div class="info-row">
-                <span>Milk</span>
-                <strong>${sub.milkType}</strong>
-            </div>
-
-            <div class="info-row">
-                <span>Quantity</span>
-                <strong>${sub.quantity} L / day</strong>
-            </div>
-
-            <div class="info-row">
-                <span>Rate</span>
-                <strong>₹${sub.rate} / L</strong>
-            </div>
-
-            <div class="info-row">
-                <span>Period</span>
-                <strong>${sub.days} days</strong>
-            </div>
-
-            <div class="info-row">
-                <span>Total</span>
-                <strong>₹${Number(sub.total).toFixed(2)}</strong>
-            </div>
-
-        `;
-
-
-    loadBilling();
-
-    loadDelivery();
-
-}
-
-
-/* =====================================================
-   BILLING
-   ===================================================== */
-
-function loadBilling(){
-
-    const sub =
-        currentCustomer.subscription;
-
-
-    if(!sub){
-
-        document.getElementById("customerBill")
-            .innerHTML =
-            "<p>No bill available.</p>";
-
-        return;
-
-    }
-
-
-    document.getElementById("customerBill")
-        .innerHTML = `
-
-            <div class="bill">
-
-                <h3>Khodaamba Milk Dairy</h3>
-
-                <br>
-
-                <div class="info-row">
-                    <span>Milk Type</span>
-                    <strong>${sub.milkType}</strong>
-                </div>
-
-                <div class="info-row">
-                    <span>Daily Quantity</span>
-                    <strong>${sub.quantity} L</strong>
-                </div>
-
-                <div class="info-row">
-                    <span>Rate</span>
-                    <strong>₹${sub.rate}/L</strong>
-                </div>
-
-                <div class="info-row">
-                    <span>Days</span>
-                    <strong>${sub.days}</strong>
-                </div>
-
-                <br>
-
-                <p>Total Amount</p>
-
-                <div class="bill-total">
-                    ₹${Number(sub.total).toFixed(2)}
-                </div>
-
-            </div>
-
-        `;
-
-
-    const status =
-        currentCustomer.paymentStatus ||
-        "Pending";
-
-
-    const element =
-        document.getElementById(
-            "customerPaymentStatus"
-        );
-
-
-    element.textContent = status;
-
-    element.className =
-        "badge " +
-        (
-            status === "Paid"
-            ? "green"
-            : "orange"
-        );
-
-}
-
-
-/* =====================================================
-   DELIVERY
-   ===================================================== */
-
-function loadDelivery(){
-
-    const sub =
-        currentCustomer.subscription;
-
-
-    if(!sub){
-
-        return;
-
-    }
-
-
-    document.getElementById("deliveryMilk")
-        .textContent =
-        sub.milkType;
-
-
-    document.getElementById("deliveryQuantity")
-        .textContent =
-        sub.quantity + " L";
-
-
-    const status =
-        currentCustomer.deliveryStatus ||
-        "Pending";
-
-
-    const element =
-        document.getElementById(
-            "deliveryStatus"
-        );
-
-
-    element.textContent =
-        status;
-
-
-    element.className =
-        "badge " +
-        (
-            status === "Delivered"
-            ? "green"
-            : status === "Out for Delivery"
-            ? "blue"
-            : "orange"
-        );
-
-}
-
-
-/* =====================================================
-   PROFILE
-   ===================================================== */
-
-function loadProfile(){
-
-    document.getElementById("profileName")
-        .value =
-        currentCustomer.name || "";
-
-
-    document.getElementById("profilePhone")
-        .value =
-        currentCustomer.phone || "";
-
-
-    document.getElementById("profileAddress")
-        .value =
-        currentCustomer.address || "";
-
-}
-
-
-window.updateProfile = async function(){
-
-    const name =
-        document.getElementById("profileName")
-            .value.trim();
-
-    const phone =
-        document.getElementById("profilePhone")
-            .value.trim();
-
-    const address =
-        document.getElementById("profileAddress")
-            .value.trim();
-
-
-    try{
-
-        await updateDoc(
-            doc(db,"customers",currentUser.uid),
-            {
-
-                name:name,
-
-                phone:phone,
-
-                address:address
-
-            }
-        );
-
-
-        currentCustomer.name = name;
-
-        currentCustomer.phone = phone;
-
-        currentCustomer.address = address;
-
-
-        document.getElementById("navUser")
-            .textContent = name;
-
-
-        showToast(
-            "Profile updated successfully."
-        );
-
-    }catch(error){
-
-        showToast(error.message);
-
-    }
-
-};
-
-
-/* =====================================================
-   ADMIN
-   ===================================================== */
-
-async function loadAdmin(){
-
-    if(
-        currentCustomer.role !== "admin" &&
-        currentUser.email.toLowerCase() !==
-        ADMIN_EMAIL.toLowerCase()
-    ){
-
-        return;
-
-    }
-
-
-    try{
-
-        const snapshot =
-            await getDocs(
-                collection(db,"customers")
-            );
-
-
-        let customers = [];
-
-        let totalLitres = 0;
-
-        let revenue = 0;
-
-        let deliveries = 0;
-
-
-        snapshot.forEach(item => {
-
-            const data = item.data();
-
-            if(data.role === "admin")
+            if (!name || !phone || !email || !password || !address) {
+                showAuthMessage("Please fill all fields.");
                 return;
-
-
-            customers.push(data);
-
-
-            if(data.subscription){
-
-                totalLitres +=
-                    Number(
-                        data.subscription.quantity || 0
-                    );
-
-
-                revenue +=
-                    Number(
-                        data.subscription.total || 0
-                    );
-
-
-                deliveries++;
-
             }
 
+            if (password.length < 6) {
+                showAuthMessage("Password must contain at least 6 characters.");
+                return;
+            }
+
+            try {
+                const result = await createUserWithEmailAndPassword(auth, email, password);
+
+                await setDoc(doc(db, "customers", result.user.uid), {
+                    uid: result.user.uid,
+                    name: name,
+                    phone: phone,
+                    email: email,
+                    address: address,
+                    role: email.toLowerCase() === ADMIN_EMAIL.toLowerCase() ? "admin" : "customer",
+                    subscription: null,
+                    paymentStatus: "Pending",
+                    deliveryStatus: "Pending",
+                    createdAt: serverTimestamp()
+                });
+
+                showToast("Account created successfully.");
+            } catch (error) {
+                showAuthMessage(error.message);
+            }
+        };
+
+
+        /* =====================================================
+           LOGIN
+           ===================================================== */
+
+        window.loginUser = async function() {
+            const email = document.getElementById("loginEmail").value.trim();
+            const password = document.getElementById("loginPassword").value;
+
+            if (!email || !password) {
+                showAuthMessage("Enter email and password.");
+                return;
+            }
+
+            try {
+                await signInWithEmailAndPassword(auth, email, password);
+            } catch (error) {
+                showAuthMessage(error.message);
+            }
+        };
+
+
+        /* =====================================================
+           AUTH STATE
+           ===================================================== */
+
+        onAuthStateChanged(auth, async user => {
+            if (user) {
+                currentUser = user;
+                document.getElementById("authScreen").classList.add("hidden");
+                document.getElementById("app").classList.remove("hidden");
+                await loadCustomer();
+            } else {
+                currentUser = null;
+                document.getElementById("authScreen").classList.remove("hidden");
+                document.getElementById("app").classList.add("hidden");
+            }
         });
 
 
-        document.getElementById("adminCustomers")
-            .textContent =
-            customers.length;
-
-
-        document.getElementById("adminLitres")
-            .textContent =
-            totalLitres.toFixed(1) + " L";
-
-
-        document.getElementById("adminRevenue")
-            .textContent =
-            "₹" + revenue.toFixed(0);
-
-
-        document.getElementById("adminDeliveries")
-            .textContent =
-            deliveries;
-
-
-        window.adminCustomersData =
-            customers;
-
-
-        renderCustomers(customers);
-
-    }catch(error){
-
-        console.error(error);
-
-    }
-
-}
-
-
-/* =====================================================
-   RENDER CUSTOMERS
-   ===================================================== */
-
-function renderCustomers(customers){
-
-    const table =
-        document.getElementById(
-            "customersTable"
-        );
-
-
-    table.innerHTML = "";
-
-
-    customers.forEach(customer => {
-
-        const sub =
-            customer.subscription;
-
-
-        const tr =
-            document.createElement("tr");
-
-
-        tr.innerHTML = `
-
-            <td>${customer.name || "-"}</td>
-
-            <td>${customer.phone || "-"}</td>
-
-            <td>${sub ? sub.milkType : "-"}</td>
-
-            <td>${sub ? sub.quantity + " L" : "-"}</td>
-
-            <td>${sub ? sub.days : "-"}</td>
-
-            <td>
-                ${sub ? "₹" + Number(sub.total).toFixed(0) : "-"}
-            </td>
-
-            <td>
-
-                <button
-                    class="action-btn
-                    ${customer.paymentStatus === "Paid"
-                    ? "success"
-                    : "warning"}"
-                    onclick="togglePayment('${customer.uid}')">
-
-                    ${customer.paymentStatus || "Pending"}
-
-                </button>
-
-            </td>
-
-            <td>
-
-                <button
-                    class="action-btn blue"
-                    onclick="changeDelivery('${customer.uid}')">
-
-                    ${customer.deliveryStatus || "Pending"}
-
-                </button>
-
-            </td>
-
-        `;
-
-
-        table.appendChild(tr);
-
-    });
-
-}
-
-
-/* =====================================================
-   FILTER CUSTOMERS
-   ===================================================== */
-
-window.filterCustomers = function(){
-
-    const search =
-        document.getElementById(
-            "customerSearch"
-        ).value.toLowerCase();
-
-
-    const filtered =
-        (window.adminCustomersData || [])
-        .filter(customer =>
-
-            (customer.name || "")
-            .toLowerCase()
-            .includes(search)
-
-            ||
-
-            (customer.phone || "")
-            .toLowerCase()
-            .includes(search)
-
-            ||
-
-            (customer.email || "")
-            .toLowerCase()
-            .includes(search)
-
-        );
-
-
-    renderCustomers(filtered);
-
-};
-
-
-/* =====================================================
-   PAYMENT STATUS
-   ===================================================== */
-
-window.togglePayment = async function(uid){
-
-    try{
-
-        const customerRef =
-            doc(db,"customers",uid);
-
-
-        const snap =
-            await getDoc(customerRef);
-
-
-        if(!snap.exists())
-            return;
-
-
-        const data = snap.data();
-
-
-        const newStatus =
-            data.paymentStatus === "Paid"
-            ? "Pending"
-            : "Paid";
-
-
-        await updateDoc(
-            customerRef,
-            {
-
-                paymentStatus:newStatus
-
+        /* =====================================================
+           LOAD CUSTOMER
+           ===================================================== */
+
+        async function loadCustomer() {
+            try {
+                const snap = await getDoc(doc(db, "customers", currentUser.uid));
+
+                if (!snap.exists()) {
+                    await setDoc(doc(db, "customers", currentUser.uid), {
+                        uid: currentUser.uid,
+                        name: currentUser.email.split("@")[0],
+                        email: currentUser.email,
+                        role: currentUser.email.toLowerCase() === ADMIN_EMAIL.toLowerCase() ? "admin" : "customer",
+                        subscription: null,
+                        paymentStatus: "Pending",
+                        deliveryStatus: "Pending",
+                        createdAt: serverTimestamp()
+                    });
+
+                    currentCustomer = {
+                        name: currentUser.email.split("@")[0],
+                        email: currentUser.email,
+                        role: currentUser.email.toLowerCase() === ADMIN_EMAIL.toLowerCase() ? "admin" : "customer"
+                    };
+                } else {
+                    currentCustomer = snap.data();
+                }
+
+                document.getElementById("navUser").textContent = currentCustomer.name || currentUser.email;
+                document.getElementById("welcomeTitle").textContent = "Welcome, " + (currentCustomer.name || "Customer");
+
+                if (currentCustomer.role === "admin" || currentUser.email.toLowerCase() === ADMIN_EMAIL.toLowerCase()) {
+                    document.getElementById("adminNav").classList.remove("hidden");
+                }
+
+                await loadRates();
+                await loadDashboard();
+                loadProfile();
+            } catch (error) {
+                console.error(error);
+                showToast("Unable to load account.");
             }
-        );
+        }
 
 
-        showToast(
-            "Payment status updated."
-        );
+        /* =====================================================
+           RATES
+           ===================================================== */
 
-
-        loadAdmin();
-
-    }catch(error){
-
-        showToast(error.message);
-
-    }
-
-};
-
-
-/* =====================================================
-   DELIVERY STATUS
-   ===================================================== */
-
-window.changeDelivery = async function(uid){
-
-    try{
-
-        const customerRef =
-            doc(db,"customers",uid);
-
-
-        const snap =
-            await getDoc(customerRef);
-
-
-        if(!snap.exists())
-            return;
-
-
-        const data = snap.data();
-
-
-        const statuses = [
-            "Pending",
-            "Out for Delivery",
-            "Delivered"
-        ];
-
-
-        let current =
-            statuses.indexOf(
-                data.deliveryStatus
-            );
-
-
-        if(current < 0)
-            current = 0;
-
-
-        const next =
-            statuses[
-                (current + 1) %
-                statuses.length
-            ];
-
-
-        await updateDoc(
-            customerRef,
-            {
-
-                deliveryStatus:next
-
+        async function loadRates() {
+            try {
+                const snap = await getDoc(doc(db, "settings", "rates"));
+                if (snap.exists()) {
+                    const data = snap.data();
+                    rates.Cow = Number(data.Cow || 60);
+                    rates.Buffalo = Number(data.Buffalo || 70);
+                }
+            } catch (error) {
+                console.log(error);
             }
-        );
+
+            document.getElementById("cowRateText").textContent = "₹" + rates.Cow + " / L";
+            document.getElementById("buffaloRateText").textContent = "₹" + rates.Buffalo + " / L";
+            if (document.getElementById("cowRate"))
+                document.getElementById("cowRate").value = rates.Cow;
+            if (document.getElementById("buffaloRate"))
+                document.getElementById("buffaloRate").value = rates.Buffalo;
+
+            calculatePreview();
+        }
 
 
-        showToast(
-            "Delivery status updated."
-        );
+        /* =====================================================
+           SELECT MILK
+           ===================================================== */
+
+        window.selectMilk = function(type) {
+            selectedMilk = type;
+            document.getElementById("cowOption").classList.toggle("selected", type === "Cow");
+            document.getElementById("buffaloOption").classList.toggle("selected", type === "Buffalo");
+            calculatePreview();
+        };
 
 
-        loadAdmin();
+        /* =====================================================
+           CALCULATE BILL
+           ===================================================== */
 
-        if(
-            currentUser.uid === uid
-        ){
+        function calculatePreview() {
+            const quantity = Number(document.getElementById("quantity").value || 1);
+            const days = Number(document.getElementById("deliveryDays").value || 30);
+            const rate = rates[selectedMilk];
+            const daily = quantity * rate;
+            const total = daily * days;
 
-            currentCustomer.deliveryStatus =
-                next;
+            document.getElementById("previewDaily").textContent = "₹" + daily.toFixed(2);
+            document.getElementById("previewTotal").textContent = "₹" + total.toFixed(2);
+        }
 
+        document.getElementById("quantity").addEventListener("change", calculatePreview);
+        document.getElementById("deliveryDays").addEventListener("change", calculatePreview);
+
+
+        /* =====================================================
+           SAVE SUBSCRIPTION
+           ===================================================== */
+
+        window.saveSubscription = async function() {
+            if (!currentUser) return;
+
+            const quantity = Number(document.getElementById("quantity").value);
+            const days = Number(document.getElementById("deliveryDays").value);
+            const rate = rates[selectedMilk];
+            const total = quantity * rate * days;
+
+            const subscription = {
+                milkType: selectedMilk,
+                quantity: quantity,
+                days: days,
+                rate: rate,
+                total: total,
+                active: true,
+                updatedAt: serverTimestamp()
+            };
+
+            try {
+                await updateDoc(doc(db, "customers", currentUser.uid), {
+                    subscription: subscription,
+                    paymentStatus: "Pending",
+                    deliveryStatus: "Pending"
+                });
+
+                currentCustomer.subscription = subscription;
+                currentCustomer.paymentStatus = "Pending";
+                currentCustomer.deliveryStatus = "Pending";
+
+                showToast("Subscription saved successfully.");
+                await loadDashboard();
+            } catch (error) {
+                showToast(error.message);
+            }
+        };
+
+
+        /* =====================================================
+           DASHBOARD
+           ===================================================== */
+
+        async function loadDashboard() {
+            const sub = currentCustomer.subscription;
+
+            if (!sub) {
+                document.getElementById("dashMilk").textContent = "0 L";
+                document.getElementById("dashDays").textContent = "0";
+                document.getElementById("dashBill").textContent = "₹0";
+                document.getElementById("dashDelivery").textContent = "Pending";
+                document.getElementById("currentSubscription").innerHTML = "<p>No active subscription.</p>";
+                return;
+            }
+
+            document.getElementById("dashMilk").textContent = sub.quantity + " L";
+            document.getElementById("dashDays").textContent = sub.days;
+            document.getElementById("dashBill").textContent = "₹" + Number(sub.total).toFixed(2);
+            document.getElementById("dashDelivery").textContent = currentCustomer.deliveryStatus || "Pending";
+
+            document.getElementById("currentSubscription").innerHTML = `
+                <div class="info-row"><span>Milk</span><strong>${sub.milkType}</strong></div>
+                <div class="info-row"><span>Quantity</span><strong>${sub.quantity} L / day</strong></div>
+                <div class="info-row"><span>Rate</span><strong>₹${sub.rate} / L</strong></div>
+                <div class="info-row"><span>Period</span><strong>${sub.days} days</strong></div>
+                <div class="info-row"><span>Total</span><strong>₹${Number(sub.total).toFixed(2)}</strong></div>
+            `;
+
+            loadBilling();
             loadDelivery();
-
         }
 
-    }catch(error){
 
-        showToast(error.message);
+        /* =====================================================
+           BILLING
+           ===================================================== */
 
-    }
-
-};
-
-
-/* =====================================================
-   UPDATE RATES
-   ===================================================== */
-
-window.updateRates = async function(){
-
-    const cow =
-        Number(
-            document.getElementById(
-                "cowRate"
-            ).value
-        );
-
-
-    const buffalo =
-        Number(
-            document.getElementById(
-                "buffaloRate"
-            ).value
-        );
-
-
-    if(!cow || !buffalo){
-
-        showToast(
-            "Enter valid rates."
-        );
-
-        return;
-
-    }
-
-
-    try{
-
-        await setDoc(
-            doc(db,"settings","rates"),
-            {
-
-                Cow:cow,
-
-                Buffalo:buffalo,
-
-                updatedAt:serverTimestamp()
-
+        function loadBilling() {
+            const sub = currentCustomer.subscription;
+            if (!sub) {
+                document.getElementById("customerBill").innerHTML = "<p>No bill available.</p>";
+                return;
             }
-        );
 
+            document.getElementById("customerBill").innerHTML = `
+                <div class="bill">
+                    <h3>Khodaamba Milk Dairy</h3>
+                    <br>
+                    <div class="info-row"><span>Milk Type</span><strong>${sub.milkType}</strong></div>
+                    <div class="info-row"><span>Daily Quantity</span><strong>${sub.quantity} L</strong></div>
+                    <div class="info-row"><span>Rate</span><strong>₹${sub.rate}/L</strong></div>
+                    <div class="info-row"><span>Days</span><strong>${sub.days}</strong></div>
+                    <br>
+                    <p>Total Amount</p>
+                    <div class="bill-total">₹${Number(sub.total).toFixed(2)}</div>
+                </div>
+            `;
 
-        rates.Cow = cow;
-
-        rates.Buffalo = buffalo;
-
-
-        document.getElementById(
-            "cowRateText"
-        ).textContent =
-            "₹" + cow + " / L";
-
-
-        document.getElementById(
-            "buffaloRateText"
-        ).textContent =
-            "₹" + buffalo + " / L";
-
-
-        calculatePreview();
-
-
-        showToast(
-            "Milk rates updated."
-        );
-
-    }catch(error){
-
-        showToast(error.message);
-
-    }
-
-};
-
-
-/* =====================================================
-   PAGE NAVIGATION
-   ===================================================== */
-
-window.openPage = async function(page){
-
-    const pages = [
-
-        "dashboard",
-
-        "subscription",
-
-        "billing",
-
-        "delivery",
-
-        "profile",
-
-        "admin"
-
-    ];
-
-
-    pages.forEach(p => {
-
-        const element =
-            document.getElementById(
-                p + "Page"
-            );
-
-
-        if(element){
-
-            element.classList.toggle(
-                "hidden",
-                p !== page
-            );
-
+            const status = currentCustomer.paymentStatus || "Pending";
+            const element = document.getElementById("customerPaymentStatus");
+            element.textContent = status;
+            element.className = "badge " + (status === "Paid" ? "green" : "orange");
         }
 
-    });
+
+        /* =====================================================
+           DELIVERY
+           ===================================================== */
+
+        function loadDelivery() {
+            const sub = currentCustomer.subscription;
+            if (!sub) return;
+
+            document.getElementById("deliveryMilk").textContent = sub.milkType;
+            document.getElementById("deliveryQuantity").textContent = sub.quantity + " L";
+
+            const status = currentCustomer.deliveryStatus || "Pending";
+            const element = document.getElementById("deliveryStatus");
+            element.textContent = status;
+            element.className = "badge " + (
+                status === "Delivered" ? "green" :
+                status === "Out for Delivery" ? "blue" : "orange"
+            );
+        }
 
 
-    if(page === "admin"){
+        /* =====================================================
+           PROFILE
+           ===================================================== */
 
-        await loadAdmin();
+        function loadProfile() {
+            document.getElementById("profileName").value = currentCustomer.name || "";
+            document.getElementById("profilePhone").value = currentCustomer.phone || "";
+            document.getElementById("profileAddress").value = currentCustomer.address || "";
+        }
 
-    }
+        window.updateProfile = async function() {
+            const name = document.getElementById("profileName").value.trim();
+            const phone = document.getElementById("profilePhone").value.trim();
+            const address = document.getElementById("profileAddress").value.trim();
 
-
-    document.getElementById("sidebar")
-        .classList.remove("open");
-
-};
-
-
-/* =====================================================
-   SIDEBAR
-   ===================================================== */
-
-window.toggleSidebar = function(){
-
-    document.getElementById("sidebar")
-        .classList.toggle("open");
-
-};
-
-
-/* =====================================================
-   LOGOUT
-   ===================================================== */
-
-window.logoutUser = async function(){
-
-    await signOut(auth);
-
-    showToast("Logged out.");
-
-};
+            try {
+                await updateDoc(doc(db, "customers", currentUser.uid), { name, phone, address });
+                currentCustomer.name = name;
+                currentCustomer.phone = phone;
+                currentCustomer.address = address;
+                document.getElementById("navUser").textContent = name;
+                showToast("Profile updated successfully.");
+            } catch (error) {
+                showToast(error.message);
+            }
+        };
 
 
-/* =====================================================
-   MESSAGE
-   ===================================================== */
+        /* =====================================================
+           ADMIN
+           ===================================================== */
 
-function showAuthMessage(message){
+        async function loadAdmin() {
+            if (currentCustomer.role !== "admin" && currentUser.email.toLowerCase() !== ADMIN_EMAIL.toLowerCase()) {
+                return;
+            }
 
-    document.getElementById(
-        "authMessage"
-    ).textContent = message;
+            try {
+                const snapshot = await getDocs(collection(db, "customers"));
+                let customers = [];
+                let totalLitres = 0;
+                let revenue = 0;
+                let deliveries = 0;
 
-}
+                snapshot.forEach(item => {
+                    const data = item.data();
+                    if (data.role === "admin") return;
+                    customers.push(data);
+                    if (data.subscription) {
+                        totalLitres += Number(data.subscription.quantity || 0);
+                        revenue += Number(data.subscription.total || 0);
+                        deliveries++;
+                    }
+                });
+
+                document.getElementById("adminCustomers").textContent = customers.length;
+                document.getElementById("adminLitres").textContent = totalLitres.toFixed(1) + " L";
+                document.getElementById("adminRevenue").textContent = "₹" + revenue.toFixed(0);
+                document.getElementById("adminDeliveries").textContent = deliveries;
+
+                window.adminCustomersData = customers;
+                renderCustomers(customers);
+            } catch (error) {
+                console.error(error);
+            }
+        }
 
 
-window.showToast = function(message){
+        /* =====================================================
+           RENDER CUSTOMERS
+           ===================================================== */
 
-    const toast =
-        document.getElementById("toast");
+        function renderCustomers(customers) {
+            const table = document.getElementById("customersTable");
+            table.innerHTML = "";
+
+            customers.forEach(customer => {
+                const sub = customer.subscription;
+                const tr = document.createElement("tr");
+                tr.innerHTML = `
+                    <td>${customer.name || "-"}</td>
+                    <td>${customer.phone || "-"}</td>
+                    <td>${sub ? sub.milkType : "-"}</td>
+                    <td>${sub ? sub.quantity + " L" : "-"}</td>
+                    <td>${sub ? sub.days : "-"}</td>
+                    <td>${sub ? "₹" + Number(sub.total).toFixed(0) : "-"}</td>
+                    <td>
+                        <button class="action-btn ${customer.paymentStatus === "Paid" ? "success" : "warning"}"
+                            onclick="togglePayment('${customer.uid}')">
+                            ${customer.paymentStatus || "Pending"}
+                        </button>
+                    </td>
+                    <td>
+                        <button class="action-btn blue" onclick="changeDelivery('${customer.uid}')">
+                            ${customer.deliveryStatus || "Pending"}
+                        </button>
+                    </td>
+                `;
+                table.appendChild(tr);
+            });
+        }
 
 
-    toast.textContent = message;
+        /* =====================================================
+           FILTER CUSTOMERS
+           ===================================================== */
 
-    toast.classList.add("show");
+        window.filterCustomers = function() {
+            const search = document.getElementById("customerSearch").value.toLowerCase();
+            const filtered = (window.adminCustomersData || []).filter(customer =>
+                (customer.name || "").toLowerCase().includes(search) ||
+                (customer.phone || "").toLowerCase().includes(search) ||
+                (customer.email || "").toLowerCase().includes(search)
+            );
+            renderCustomers(filtered);
+        };
 
 
-    setTimeout(() => {
+        /* =====================================================
+           PAYMENT STATUS
+           ===================================================== */
 
-        toast.classList.remove("show");
+        window.togglePayment = async function(uid) {
+            try {
+                const customerRef = doc(db, "customers", uid);
+                const snap = await getDoc(customerRef);
+                if (!snap.exists()) return;
 
-    },3000);
+                const data = snap.data();
+                const newStatus = data.paymentStatus === "Paid" ? "Pending" : "Paid";
+                await updateDoc(customerRef, { paymentStatus: newStatus });
+                showToast("Payment status updated.");
+                loadAdmin();
+            } catch (error) {
+                showToast(error.message);
+            }
+        };
 
-};
 
-</script>
+        /* =====================================================
+           DELIVERY STATUS
+           ===================================================== */
+
+        window.changeDelivery = async function(uid) {
+            try {
+                const customerRef = doc(db, "customers", uid);
+                const snap = await getDoc(customerRef);
+                if (!snap.exists()) return;
+
+                const data = snap.data();
+                const statuses = ["Pending", "Out for Delivery", "Delivered"];
+                let current = statuses.indexOf(data.deliveryStatus);
+                if (current < 0) current = 0;
+                const next = statuses[(current + 1) % statuses.length];
+
+                await updateDoc(customerRef, { deliveryStatus: next });
+                showToast("Delivery status updated.");
+                loadAdmin();
+
+                if (currentUser.uid === uid) {
+                    currentCustomer.deliveryStatus = next;
+                    loadDelivery();
+                }
+            } catch (error) {
+                showToast(error.message);
+            }
+        };
+
+
+        /* =====================================================
+           UPDATE RATES
+           ===================================================== */
+
+        window.updateRates = async function() {
+            const cow = Number(document.getElementById("cowRate").value);
+            const buffalo = Number(document.getElementById("buffaloRate").value);
+
+            if (!cow || !buffalo) {
+                showToast("Enter valid rates.");
+                return;
+            }
+
+            try {
+                await setDoc(doc(db, "settings", "rates"), {
+                    Cow: cow,
+                    Buffalo: buffalo,
+                    updatedAt: serverTimestamp()
+                });
+
+                rates.Cow = cow;
+                rates.Buffalo = buffalo;
+
+                document.getElementById("cowRateText").textContent = "₹" + cow + " / L";
+                document.getElementById("buffaloRateText").textContent = "₹" + buffalo + " / L";
+
+                calculatePreview();
+                showToast("Milk rates updated.");
+            } catch (error) {
+                showToast(error.message);
+            }
+        };
+
+
+        /* =====================================================
+           PAGE NAVIGATION
+           ===================================================== */
+
+        window.openPage = async function(page) {
+            const pages = ["dashboard", "subscription", "billing", "delivery", "profile", "admin"];
+            pages.forEach(p => {
+                const element = document.getElementById(p + "Page");
+                if (element) element.classList.toggle("hidden", p !== page);
+            });
+
+            if (page === "admin") {
+                await loadAdmin();
+            }
+
+            document.getElementById("sidebar").classList.remove("open");
+        };
+
+
+        /* =====================================================
+           SIDEBAR
+           ===================================================== */
+
+        window.toggleSidebar = function() {
+            document.getElementById("sidebar").classList.toggle("open");
+        };
+
+
+        /* =====================================================
+           LOGOUT
+           ===================================================== */
+
+        window.logoutUser = async function() {
+            await signOut(auth);
+            showToast("Logged out.");
+        };
+
+
+        /* =====================================================
+           MESSAGE
+           ===================================================== */
+
+        function showAuthMessage(message) {
+            document.getElementById("authMessage").textContent = message;
+        }
+
+        window.showToast = function(message) {
+            const toast = document.getElementById("toast");
+            toast.textContent = message;
+            toast.classList.add("show");
+            setTimeout(() => {
+                toast.classList.remove("show");
+            }, 3000);
+        };
+    </script>
 
 </body>
 </html>
