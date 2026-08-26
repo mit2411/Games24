@@ -197,6 +197,12 @@
             border-color: var(--primary2);
             box-shadow: 0 0 0 3px var(--primary2)33;
         }
+        .form-group .input-hint {
+            font-size: 11px;
+            color: var(--gray);
+            margin-top: 4px;
+            opacity: 0.7;
+        }
         .primary-btn {
             width: 100%;
             border: 0;
@@ -218,6 +224,59 @@
             text-align: center;
             font-size: 13px;
             color: var(--danger);
+        }
+        .auth-message.success {
+            color: var(--success);
+        }
+
+        /* ─── FORGOT PASSWORD LINK ─── */
+        .forgot-link {
+            text-align: right;
+            margin-top: -8px;
+            margin-bottom: 12px;
+        }
+        .forgot-link button {
+            background: none;
+            border: none;
+            color: var(--primary3);
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+            padding: 4px 0;
+            transition: color var(--transition);
+        }
+        .forgot-link button:hover {
+            color: var(--primary2);
+            text-decoration: underline;
+        }
+
+        /* ─── PHONE/EMAIL TOGGLE ─── */
+        .login-method-toggle {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 12px;
+            background: var(--bg);
+            padding: 4px;
+            border-radius: 10px;
+            border: 1px solid var(--border);
+        }
+        .login-method-toggle button {
+            flex: 1;
+            padding: 8px;
+            border-radius: 8px;
+            background: transparent;
+            color: var(--text);
+            font-size: 13px;
+            font-weight: 600;
+            transition: all var(--transition);
+        }
+        .login-method-toggle button.active {
+            background: var(--card-bg);
+            color: var(--primary2);
+            box-shadow: var(--shadow);
+        }
+        .login-method-toggle button:hover:not(.active) {
+            background: var(--input-bg);
         }
 
         /* ─── APP SHELL ─── */
@@ -1099,6 +1158,10 @@
                 font-size: 11px;
                 padding: 14px;
             }
+            .login-method-toggle button {
+                font-size: 11px;
+                padding: 6px;
+            }
         }
     </style>
 </head>
@@ -1116,17 +1179,35 @@
                 <button id="loginTab" class="active" onclick="showLogin()">Login</button>
                 <button id="registerTab" onclick="showRegister()">Register</button>
             </div>
+
+            <!-- LOGIN FORM -->
             <div id="loginForm">
-                <div class="form-group">
-                    <label>Email</label>
-                    <input id="loginEmail" type="email" placeholder="Enter email">
+                <!-- Toggle: Email / Phone -->
+                <div class="login-method-toggle">
+                    <button id="loginMethodEmail" class="active" onclick="setLoginMethod('email')">📧 Email</button>
+                    <button id="loginMethodPhone" onclick="setLoginMethod('phone')">📱 Phone</button>
+                </div>
+
+                <div class="form-group" id="loginEmailGroup">
+                    <label>Email Address</label>
+                    <input id="loginEmail" type="email" placeholder="Enter your email">
+                </div>
+                <div class="form-group hidden" id="loginPhoneGroup">
+                    <label>Phone Number</label>
+                    <input id="loginPhone" type="tel" placeholder="Enter phone number (e.g. 9876543210)">
+                    <div class="input-hint">Enter 10-digit mobile number</div>
                 </div>
                 <div class="form-group">
                     <label>Password</label>
-                    <input id="loginPassword" type="password" placeholder="Enter password">
+                    <input id="loginPassword" type="password" placeholder="Enter your password">
+                </div>
+                <div class="forgot-link">
+                    <button onclick="showForgotPassword()">🔑 Forgot Password?</button>
                 </div>
                 <button class="primary-btn" onclick="loginUser()">Login</button>
             </div>
+
+            <!-- REGISTER FORM -->
             <div id="registerForm" class="hidden">
                 <div class="form-group">
                     <label>Full Name</label>
@@ -1135,6 +1216,7 @@
                 <div class="form-group">
                     <label>Mobile</label>
                     <input id="regPhone" type="tel" placeholder="Enter mobile number">
+                    <div class="input-hint">10-digit number</div>
                 </div>
                 <div class="form-group">
                     <label>Email</label>
@@ -1150,6 +1232,18 @@
                 </div>
                 <button class="primary-btn" onclick="registerUser()">Create Account</button>
             </div>
+
+            <!-- FORGOT PASSWORD OVERLAY (inline) -->
+            <div id="forgotPasswordPanel" class="hidden" style="margin-top:16px;padding:16px;background:var(--bg);border-radius:12px;border:1px solid var(--border);">
+                <div class="form-group">
+                    <label>Email Address</label>
+                    <input id="resetEmail" type="email" placeholder="Enter your registered email">
+                    <div class="input-hint">We'll send a password reset link to this email.</div>
+                </div>
+                <button class="primary-btn" onclick="sendPasswordReset()" style="margin-top:4px;">Send Reset Link</button>
+                <button onclick="hideForgotPassword()" style="display:block;margin:10px auto 0;background:none;border:none;color:var(--gray);font-size:13px;cursor:pointer;">← Back to Login</button>
+            </div>
+
             <div id="authMessage" class="auth-message"></div>
         </div>
     </div>
@@ -1273,7 +1367,9 @@
             createUserWithEmailAndPassword,
             signInWithEmailAndPassword,
             signOut,
-            onAuthStateChanged
+            onAuthStateChanged,
+            sendPasswordResetEmail,
+            fetchSignInMethodsForEmail
         } from "https://www.gstatic.com/firebasejs/12.18.0/firebase-auth.js";
         import {
             getFirestore,
@@ -1281,7 +1377,11 @@
             setDoc,
             getDoc,
             updateDoc,
-            serverTimestamp
+            serverTimestamp,
+            collection,
+            query,
+            where,
+            getDocs
         } from "https://www.gstatic.com/firebasejs/12.18.0/firebase-firestore.js";
 
         const firebaseConfig = {
@@ -1305,6 +1405,7 @@
         let audioCtx = null;
         let musicNodes = [];
         let musicInterval = null;
+        let loginMethod = 'email'; // 'email' or 'phone'
 
         // ─── THEME ───
         const savedTheme = localStorage.getItem('theme') || 'dark';
@@ -1326,22 +1427,90 @@
             el._timeout = setTimeout(() => el.classList.remove('show'), 3000);
         }
 
-        function showAuthMessage(msg) {
-            document.getElementById('authMessage').textContent = msg;
+        function showAuthMessage(msg, isSuccess = false) {
+            const el = document.getElementById('authMessage');
+            el.textContent = msg;
+            el.className = 'auth-message' + (isSuccess ? ' success' : '');
         }
 
         // ─── AUTH UI ───
         window.showLogin = function() {
             document.getElementById('loginForm').classList.remove('hidden');
             document.getElementById('registerForm').classList.add('hidden');
+            document.getElementById('forgotPasswordPanel').classList.add('hidden');
             document.getElementById('loginTab').classList.add('active');
             document.getElementById('registerTab').classList.remove('active');
+            document.getElementById('authMessage').textContent = '';
+            document.getElementById('authMessage').className = 'auth-message';
+            // Reset to email by default
+            setLoginMethod('email');
         };
+
         window.showRegister = function() {
             document.getElementById('loginForm').classList.add('hidden');
             document.getElementById('registerForm').classList.remove('hidden');
+            document.getElementById('forgotPasswordPanel').classList.add('hidden');
             document.getElementById('loginTab').classList.remove('active');
             document.getElementById('registerTab').classList.add('active');
+            document.getElementById('authMessage').textContent = '';
+            document.getElementById('authMessage').className = 'auth-message';
+        };
+
+        // ─── LOGIN METHOD TOGGLE ───
+        window.setLoginMethod = function(method) {
+            loginMethod = method;
+            const emailBtn = document.getElementById('loginMethodEmail');
+            const phoneBtn = document.getElementById('loginMethodPhone');
+            const emailGroup = document.getElementById('loginEmailGroup');
+            const phoneGroup = document.getElementById('loginPhoneGroup');
+
+            emailBtn.classList.toggle('active', method === 'email');
+            phoneBtn.classList.toggle('active', method === 'phone');
+
+            if (method === 'email') {
+                emailGroup.classList.remove('hidden');
+                phoneGroup.classList.add('hidden');
+            } else {
+                emailGroup.classList.add('hidden');
+                phoneGroup.classList.remove('hidden');
+            }
+            document.getElementById('authMessage').textContent = '';
+            document.getElementById('authMessage').className = 'auth-message';
+        };
+
+        // ─── FORGOT PASSWORD ───
+        window.showForgotPassword = function() {
+            document.getElementById('forgotPasswordPanel').classList.remove('hidden');
+            document.getElementById('authMessage').textContent = '';
+            document.getElementById('authMessage').className = 'auth-message';
+        };
+
+        window.hideForgotPassword = function() {
+            document.getElementById('forgotPasswordPanel').classList.add('hidden');
+            document.getElementById('authMessage').textContent = '';
+            document.getElementById('authMessage').className = 'auth-message';
+        };
+
+        window.sendPasswordReset = async function() {
+            const email = document.getElementById('resetEmail').value.trim();
+            if (!email) {
+                showAuthMessage('Please enter your email address.');
+                return;
+            }
+            try {
+                // Check if the email exists in Firebase Auth
+                const methods = await fetchSignInMethodsForEmail(auth, email);
+                if (methods.length === 0) {
+                    showAuthMessage('No account found with this email. Please register first.');
+                    return;
+                }
+                await sendPasswordResetEmail(auth, email);
+                showAuthMessage('✅ Password reset link sent to ' + email + '! Check your inbox.', true);
+                document.getElementById('resetEmail').value = '';
+                setTimeout(() => hideForgotPassword(), 3000);
+            } catch (error) {
+                showAuthMessage(error.message);
+            }
         };
 
         // ─── REGISTER ───
@@ -1351,9 +1520,20 @@
             const email = document.getElementById('regEmail').value.trim();
             const password = document.getElementById('regPassword').value;
             const address = document.getElementById('regAddress').value.trim();
-            if (!name || !phone || !email || !password || !address) { showAuthMessage('Please fill all fields.');
-                return; }
-            if (password.length < 6) { showAuthMessage('Password must be at least 6 characters.'); return; }
+
+            if (!name || !phone || !email || !password || !address) {
+                showAuthMessage('Please fill all fields.');
+                return;
+            }
+            if (phone.length < 10) {
+                showAuthMessage('Please enter a valid 10-digit phone number.');
+                return;
+            }
+            if (password.length < 6) {
+                showAuthMessage('Password must be at least 6 characters.');
+                return;
+            }
+
             try {
                 const result = await createUserWithEmailAndPassword(auth, email, password);
                 await setDoc(doc(db, 'customers', result.user.uid), {
@@ -1365,18 +1545,76 @@
                     role: 'customer',
                     createdAt: serverTimestamp()
                 });
-                showToast('Account created! Welcome to Game24 24/7! 🎮');
-            } catch (error) { showAuthMessage(error.message); }
+                showToast('🎉 Account created! Welcome to Game24 24/7!');
+                showAuthMessage('✅ Registration successful!', true);
+            } catch (error) {
+                showAuthMessage(error.message);
+            }
         };
 
         // ─── LOGIN ───
         window.loginUser = async function() {
-            const email = document.getElementById('loginEmail').value.trim();
             const password = document.getElementById('loginPassword').value;
-            if (!email || !password) { showAuthMessage('Enter email and password.'); return; }
-            try {
-                await signInWithEmailAndPassword(auth, email, password);
-            } catch (error) { showAuthMessage(error.message); }
+
+            let emailOrPhone = '';
+            let isPhone = false;
+
+            if (loginMethod === 'email') {
+                emailOrPhone = document.getElementById('loginEmail').value.trim();
+                if (!emailOrPhone || !password) {
+                    showAuthMessage('Please enter email and password.');
+                    return;
+                }
+                // Check if it's a phone number entered in email field
+                if (/^\d{10}$/.test(emailOrPhone)) {
+                    // It's a phone number, switch to phone mode
+                    showAuthMessage('📱 Looks like a phone number. Please switch to "Phone" tab.');
+                    return;
+                }
+                try {
+                    await signInWithEmailAndPassword(auth, emailOrPhone, password);
+                    return;
+                } catch (error) {
+                    showAuthMessage(error.message);
+                    return;
+                }
+            } else {
+                // Phone login
+                const phone = document.getElementById('loginPhone').value.trim();
+                if (!phone || !password) {
+                    showAuthMessage('Please enter phone number and password.');
+                    return;
+                }
+                if (!/^\d{10}$/.test(phone)) {
+                    showAuthMessage('Please enter a valid 10-digit phone number.');
+                    return;
+                }
+
+                try {
+                    // Look up the user by phone number in Firestore
+                    const customersRef = collection(db, 'customers');
+                    const q = query(customersRef, where('phone', '==', phone));
+                    const querySnap = await getDocs(q);
+
+                    if (querySnap.empty) {
+                        showAuthMessage('No account found with this phone number. Please register.');
+                        return;
+                    }
+
+                    const userDoc = querySnap.docs[0];
+                    const email = userDoc.data().email;
+
+                    if (!email) {
+                        showAuthMessage('This phone number is not linked to an email. Please contact support.');
+                        return;
+                    }
+
+                    // Sign in with the associated email
+                    await signInWithEmailAndPassword(auth, email, password);
+                } catch (error) {
+                    showAuthMessage(error.message);
+                }
+            }
         };
 
         // ─── AUTH STATE ───
@@ -1391,6 +1629,9 @@
                 currentUser = null;
                 document.getElementById('authScreen').classList.remove('hidden');
                 document.getElementById('app').classList.add('hidden');
+                // Reset auth message
+                document.getElementById('authMessage').textContent = '';
+                document.getElementById('authMessage').className = 'auth-message';
             }
         });
 
@@ -1412,8 +1653,10 @@
                 }
                 document.getElementById('navUser').textContent = currentCustomer.name || currentUser.email;
                 loadProfile();
-            } catch (error) { console.error(error);
-                showToast('Unable to load account.'); }
+            } catch (error) {
+                console.error(error);
+                showToast('Unable to load account.');
+            }
         }
 
         // ─── PROFILE ───
@@ -1422,18 +1665,22 @@
             document.getElementById('profilePhone').value = currentCustomer.phone || '';
             document.getElementById('profileAddress').value = currentCustomer.address || '';
         }
+
         window.updateProfile = async function() {
             const name = document.getElementById('profileName').value.trim();
             const phone = document.getElementById('profilePhone').value.trim();
             const address = document.getElementById('profileAddress').value.trim();
+
             try {
                 await updateDoc(doc(db, 'customers', currentUser.uid), { name, phone, address });
                 currentCustomer.name = name;
                 currentCustomer.phone = phone;
                 currentCustomer.address = address;
                 document.getElementById('navUser').textContent = name;
-                showToast('Profile updated!');
-            } catch (error) { showToast(error.message); }
+                showToast('✅ Profile updated!');
+            } catch (error) {
+                showToast(error.message);
+            }
         };
 
         // ─── PAGE NAV ───
@@ -1456,7 +1703,7 @@
         window.logoutUser = async function() {
             stopMusic();
             await signOut(auth);
-            showToast('Logged out. See you soon! 👋');
+            showToast('👋 Logged out. See you soon!');
         };
 
         // ═══════════════════════════════════════════════════════
@@ -1537,7 +1784,7 @@
                     break;
                 case 2:
                     settings = { speed: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10], obstacles: ['Low', 'Medium', 'High'],
-                        laps: [1, 3, 5] };
+                    laps: [1, 3, 5] };
                     break;
                 case 3:
                     settings = { ai: ['Easy', 'Medium', 'Hard', 'Expert'], board: ['Small', 'Medium', 'Large'],
@@ -1565,13 +1812,13 @@
                 const card = document.createElement('div');
                 card.className = `game-card${game.playable ? '' : ' coming'}`;
                 card.innerHTML = `
-                    <span class="badge-num">#${idx+1}</span>
-                    <span class="icon">${game.icon}</span>
-                    <h3>${game.name}</h3>
-                    <p>${game.category}</p>
-                    <span class="category-tag">${game.playable ? '🎮 Playable' : '⏳ Coming'}</span>
-                    <span class="play-badge">${game.playable ? '▶ Play' : '🔜 Soon'}</span>
-                `;
+                        <span class="badge-num">#${idx+1}</span>
+                        <span class="icon">${game.icon}</span>
+                        <h3>${game.name}</h3>
+                        <p>${game.category}</p>
+                        <span class="category-tag">${game.playable ? '🎮 Playable' : '⏳ Coming'}</span>
+                        <span class="play-badge">${game.playable ? '▶ Play' : '🔜 Soon'}</span>
+                    `;
                 card.addEventListener('click', () => {
                     if (game.playable) {
                         launchGame(game.id);
@@ -1595,11 +1842,8 @@
             document.getElementById('gamePlayArea').classList.remove('hidden');
             document.getElementById('gameTitle').textContent = `${game.icon} ${game.name}`;
 
-            // Render settings
             renderSettings(game);
-            // Render game content
             renderGameContent(game);
-            // Start music
             playGameMusic(game);
 
             document.getElementById('gameMusicIndicator').textContent = `🎵 Music: 🎶 ${game.name}`;
@@ -1614,46 +1858,41 @@
             for (const [key, values] of Object.entries(settings)) {
                 const label = key.charAt(0).toUpperCase() + key.slice(1);
                 if (Array.isArray(values) && values.length > 0 && typeof values[0] === 'string') {
-                    // Dropdown
                     html += `
-                        <div class="setting-item">
-                            <label>${label}</label>
-                            <select id="setting_${key}">
-                                ${values.map(v => `<option value="${v}">${v}</option>`).join('')}
-                            </select>
-                        </div>
-                    `;
+                            <div class="setting-item">
+                                <label>${label}</label>
+                                <select id="setting_${key}">
+                                    ${values.map(v => `<option value="${v}">${v}</option>`).join('')}
+                                </select>
+                            </div>
+                        `;
                 } else if (Array.isArray(values) && values.length > 0 && typeof values[0] === 'number') {
-                    // Range slider
                     const min = Math.min(...values);
                     const max = Math.max(...values);
                     const step = values.length > 1 ? (values[1] - values[0]) : 1;
                     html += `
-                        <div class="setting-item">
-                            <label>${label}: <span class="value-display" id="val_${key}">${values[0]}</span></label>
-                            <input type="range" id="setting_${key}" min="${min}" max="${max}" step="${step}" value="${values[0]}">
-                        </div>
-                    `;
+                            <div class="setting-item">
+                                <label>${label}: <span class="value-display" id="val_${key}">${values[0]}</span></label>
+                                <input type="range" id="setting_${key}" min="${min}" max="${max}" step="${step}" value="${values[0]}">
+                            </div>
+                        `;
                 }
             }
-            // Special: Speed control for racing games
             if (game.name.toLowerCase().includes('race') || game.name.toLowerCase().includes('drive') || game.name
                 .toLowerCase().includes('speed') || game.id % 3 === 2) {
                 html += `
-                    <div class="setting-item">
-                        <label>🎯 Speed Control: <span class="value-display" id="val_speed">5</span></label>
-                        <input type="range" id="setting_speed" min="1" max="10" step="1" value="5">
-                    </div>
-                `;
+                        <div class="setting-item">
+                            <label>🎯 Speed Control: <span class="value-display" id="val_speed">5</span></label>
+                            <input type="range" id="setting_speed" min="1" max="10" step="1" value="5">
+                        </div>
+                    `;
             }
             panel.innerHTML = html;
 
-            // Add event listeners for range sliders
             panel.querySelectorAll('input[type="range"]').forEach(el => {
                 el.addEventListener('input', function() {
                     const valDisplay = document.getElementById(`val_${this.id.replace('setting_', '')}`);
                     if (valDisplay) valDisplay.textContent = this.value;
-                    // Update game speed if it's the speed control
                     if (this.id === 'setting_speed') {
                         updateGameSpeed(parseInt(this.value));
                     }
@@ -1661,18 +1900,12 @@
             });
         }
 
-        // ─── UPDATE GAME SPEED ───
         let currentSpeed = 5;
 
         function updateGameSpeed(speed) {
             currentSpeed = speed;
             if (activeGame && activeGame.name.toLowerCase().includes('race')) {
-                // Update racing speed
-                const playerCar = document.querySelector('.player-car');
-                if (playerCar) {
-                    // Visual feedback
-                    showToast(`⚡ Speed set to ${speed}/10`);
-                }
+                showToast(`⚡ Speed set to ${speed}/10`);
             }
         }
 
@@ -1692,18 +1925,18 @@
             else if (id === 9) renderMinesweeper(container);
             else {
                 container.innerHTML = `
-                    <div class="coming-soon">
-                        <span class="big-icon">${game.icon}</span>
-                        <h3>${game.name}</h3>
-                        <p>🎮 This game is fully playable!<br>Settings and music are customized just for you.</p>
-                        <p style="margin-top:12px;font-size:13px;color:var(--primary2);">
-                            🎵 Music: ${game.musicFreq}Hz · Pattern ${game.musicPattern}
-                        </p>
-                        <button class="primary-btn" style="max-width:200px;margin:16px auto;" onclick="showToast('🎮 Game loaded! Enjoy!')">
-                            ▶ Play Now
-                        </button>
-                    </div>
-                `;
+                        <div class="coming-soon">
+                            <span class="big-icon">${game.icon}</span>
+                            <h3>${game.name}</h3>
+                            <p>🎮 This game is fully playable!<br>Settings and music are customized just for you.</p>
+                            <p style="margin-top:12px;font-size:13px;color:var(--primary2);">
+                                🎵 Music: ${game.musicFreq}Hz · Pattern ${game.musicPattern}
+                            </p>
+                            <button class="primary-btn" style="max-width:200px;margin:16px auto;" onclick="showToast('🎮 Game loaded! Enjoy!')">
+                                ▶ Play Now
+                            </button>
+                        </div>
+                    `;
             }
         }
 
@@ -1734,7 +1967,7 @@
                         const piece = board[r][c];
                         const sel = selected && selected[0] === r && selected[1] === c ? 'selected' : '';
                         html += `<div class="chess-square ${isLight ? 'light' : 'dark'} ${sel}" 
-                                  data-r="${r}" data-c="${c}">${piece || ''}</div>`;
+                                      data-r="${r}" data-c="${c}">${piece || ''}</div>`;
                     }
                 }
                 html += '</div>';
@@ -1801,14 +2034,14 @@
                 html += '</div>';
                 const turnName = players[turn].name;
                 html += `
-                    <div class="ludo-controls">
-                        <div class="turn-indicator" style="background:${players[turn].color};color:#fff;padding:6px 18px;border-radius:30px;">
-                            ${turnName}'s turn
+                        <div class="ludo-controls">
+                            <div class="turn-indicator" style="background:${players[turn].color};color:#fff;padding:6px 18px;border-radius:30px;">
+                                ${turnName}'s turn
+                            </div>
+                            <div class="dice">⚀</div>
+                            <button id="rollDiceBtn">🎲 Roll Dice</button>
                         </div>
-                        <div class="dice">⚀</div>
-                        <button id="rollDiceBtn">🎲 Roll Dice</button>
-                    </div>
-                `;
+                    `;
                 container.innerHTML = html;
 
                 document.getElementById('rollDiceBtn').addEventListener('click', function() {
@@ -1849,12 +2082,12 @@
             const track = document.createElement('div');
             track.className = 'race-track';
             track.innerHTML = `
-                <div class="road">
-                    <div class="lane-marker"></div><div class="lane-marker"></div>
-                    <div class="lane-marker"></div><div class="lane-marker"></div>
-                </div>
-                <div class="player-car" id="playerCar" style="left:50%;">🏎️</div>
-            `;
+                    <div class="road">
+                        <div class="lane-marker"></div><div class="lane-marker"></div>
+                        <div class="lane-marker"></div><div class="lane-marker"></div>
+                    </div>
+                    <div class="player-car" id="playerCar" style="left:50%;">🏎️</div>
+                `;
             container.innerHTML = '';
             container.appendChild(track);
 
@@ -1949,7 +2182,6 @@
 
             resetRace();
 
-            // Speed control override
             const speedSetting = document.getElementById('setting_speed');
             if (speedSetting) {
                 speedSetting.addEventListener('input', function() {
@@ -1986,20 +2218,20 @@
             const info = document.createElement('div');
             info.className = 'bus-info';
             info.innerHTML = `<span id="busMapName">${maps[0].name}</span>
-                              <span>🚌 <span id="busPos">50, 50</span></span>`;
+                                  <span>🚌 <span id="busPos">50, 50</span></span>`;
             container.appendChild(info);
 
             const steering = document.createElement('div');
             steering.className = 'bus-steering';
             steering.innerHTML = `
-                <div class="wheel" id="steeringWheel"><div class="inner">⬆</div></div>
-                <div style="display:flex;gap:8px;flex-wrap:wrap;">
-                    <button id="busUp">▲</button><button id="busDown">▼</button>
-                    <button id="busLeft">◀</button><button id="busRight">▶</button>
-                    <button id="busMapBtn">🗺️ Next Map</button>
-                    <button id="busReset">🔄 Reset</button>
-                </div>
-            `;
+                    <div class="wheel" id="steeringWheel"><div class="inner">⬆</div></div>
+                    <div style="display:flex;gap:8px;flex-wrap:wrap;">
+                        <button id="busUp">▲</button><button id="busDown">▼</button>
+                        <button id="busLeft">◀</button><button id="busRight">▶</button>
+                        <button id="busMapBtn">🗺️ Next Map</button>
+                        <button id="busReset">🔄 Reset</button>
+                    </div>
+                `;
             container.appendChild(steering);
 
             const ctx = canvas.getContext('2d');
@@ -2281,16 +2513,18 @@
 
             function renderBoard() {
                 if (shuffled.length === 0) shuffled = shuffle([...cards]);
-                let html = `<div style="display:grid;grid-template-columns:repeat(4,1fr);gap:8px;max-width:320px;margin:0 auto;">`;
+                let html =
+                    `<div style="display:grid;grid-template-columns:repeat(4,1fr);gap:8px;max-width:320px;margin:0 auto;">`;
                 for (let i = 0; i < shuffled.length; i++) {
                     const isFlipped = flipped.includes(i) || matched.includes(i);
                     const emoji = isFlipped ? shuffled[i] : '❓';
                     const isMatched = matched.includes(i);
                     html += `<div class="ttt-cell" style="font-size:32px;cursor:${isMatched ? 'default' : 'pointer'};background:${isMatched ? 'var(--success)33' : 'var(--bg)'};border-color:${isMatched ? 'var(--success)' : 'var(--border)'};"
-                              data-idx="${i}">${emoji}</div>`;
+                                  data-idx="${i}">${emoji}</div>`;
                 }
                 html += '</div>';
-                html += `<div style="text-align:center;margin-top:12px;font-weight:700;color:var(--text);">🎯 Matched: ${matched.length/2}/${pairs.length}</div>`;
+                html +=
+                    `<div style="text-align:center;margin-top:12px;font-weight:700;color:var(--text);">🎯 Matched: ${matched.length/2}/${pairs.length}</div>`;
                 if (matched.length === cards.length) {
                     html +=
                         `<div style="text-align:center;margin-top:12px;"><button class="primary-btn" style="max-width:150px;" onclick="renderMemory(document.getElementById('gameContent'))">🔄 New Game</button></div>`;
@@ -2329,18 +2563,18 @@
         // ─── PONG ───
         function renderPong(container) {
             container.innerHTML = `
-                <div style="text-align:center;padding:20px;">
-                    <h3 style="font-size:24px;margin-bottom:12px;">🏓 Pong</h3>
-                    <p style="color:var(--gray);">Use W/S keys to move left paddle. First to 5 wins!</p>
-                    <div style="position:relative;width:100%;max-width:400px;height:200px;margin:16px auto;background:var(--bg);border-radius:12px;border:2px solid var(--border);overflow:hidden;" id="pongCanvas">
-                        <div style="position:absolute;left:10px;top:80px;width:6px;height:40px;background:var(--primary2);border-radius:4px;" id="paddle1"></div>
-                        <div style="position:absolute;right:10px;top:80px;width:6px;height:40px;background:var(--danger);border-radius:4px;" id="paddle2"></div>
-                        <div style="position:absolute;left:50%;top:50%;width:12px;height:12px;border-radius:50%;background:var(--text);transform:translate(-50%,-50%);" id="ball"></div>
-                        <div style="position:absolute;top:4px;left:50%;transform:translateX(-50%);font-size:13px;font-weight:700;color:var(--gray);" id="pongScore">0 - 0</div>
+                    <div style="text-align:center;padding:20px;">
+                        <h3 style="font-size:24px;margin-bottom:12px;">🏓 Pong</h3>
+                        <p style="color:var(--gray);">Use W/S keys to move left paddle. First to 5 wins!</p>
+                        <div style="position:relative;width:100%;max-width:400px;height:200px;margin:16px auto;background:var(--bg);border-radius:12px;border:2px solid var(--border);overflow:hidden;" id="pongCanvas">
+                            <div style="position:absolute;left:10px;top:80px;width:6px;height:40px;background:var(--primary2);border-radius:4px;" id="paddle1"></div>
+                            <div style="position:absolute;right:10px;top:80px;width:6px;height:40px;background:var(--danger);border-radius:4px;" id="paddle2"></div>
+                            <div style="position:absolute;left:50%;top:50%;width:12px;height:12px;border-radius:50%;background:var(--text);transform:translate(-50%,-50%);" id="ball"></div>
+                            <div style="position:absolute;top:4px;left:50%;transform:translateX(-50%);font-size:13px;font-weight:700;color:var(--gray);" id="pongScore">0 - 0</div>
+                        </div>
+                        <button class="primary-btn" style="max-width:150px;margin:0 auto;" onclick="renderPong(document.getElementById('gameContent'))">🔄 Restart</button>
                     </div>
-                    <button class="primary-btn" style="max-width:150px;margin:0 auto;" onclick="renderPong(document.getElementById('gameContent'))">🔄 Restart</button>
-                </div>
-            `;
+                `;
 
             const paddle1 = document.getElementById('paddle1');
             const paddle2 = document.getElementById('paddle2');
@@ -2369,38 +2603,29 @@
 
             function gameLoop() {
                 if (!running) return;
-                // Move paddles
                 if (keys.w && p1y > 0) p1y -= pSpeed;
                 if (keys.s && p1y < 160) p1y += pSpeed;
-                // AI for paddle2
                 const target = by - 20;
                 if (p2y < target && p2y < 160) p2y += pSpeed * 0.6;
                 if (p2y > target && p2y > 0) p2y -= pSpeed * 0.6;
 
-                // Move ball
                 bx += dx;
                 by += dy;
 
-                // Wall bounce
                 if (by < 0 || by > 190) dy = -dy;
 
-                // Paddle collisions
                 if (bx < 16 && by > p1y - 10 && by < p1y + 50) { dx = Math.abs(dx);
                     dy += (by - (p1y + 20)) * 0.05; }
                 if (bx > 384 && by > p2y - 10 && by < p2y + 50) { dx = -Math.abs(dx);
                     dy += (by - (p2y + 20)) * 0.05; }
 
-                // Scoring
                 if (bx < -10) { score2++;
-                    resetBall();
-                    if (score2 >= 5) { running = false;
+                    resetBall(); if (score2 >= 5) { running = false;
                         showToast('🏆 Player 2 wins!'); } }
                 if (bx > 410) { score1++;
-                    resetBall();
-                    if (score1 >= 5) { running = false;
+                    resetBall(); if (score1 >= 5) { running = false;
                         showToast('🏆 Player 1 wins!'); } }
 
-                // Update UI
                 paddle1.style.top = p1y + 'px';
                 paddle2.style.top = p2y + 'px';
                 ball.style.left = bx + 'px';
@@ -2426,8 +2651,6 @@
             if (speedSetting) {
                 speedSetting.addEventListener('input', function() {
                     const val = parseInt(this.value);
-                    const newSpeed = 2 + (val - 1) * 0.4;
-                    const spd = newSpeed;
                     showToast(`🏓 Speed: ${val}/10`);
                 });
             }
@@ -2436,19 +2659,19 @@
         // ─── BREAKOUT ───
         function renderBreakout(container) {
             container.innerHTML = `
-                <div style="text-align:center;padding:20px;">
-                    <h3 style="font-size:24px;margin-bottom:12px;">🧱 Breakout</h3>
-                    <p style="color:var(--gray);">Use ← → or A/D to move paddle. Break all bricks!</p>
-                    <div style="position:relative;width:100%;max-width:400px;height:260px;margin:12px auto;background:var(--bg);border-radius:12px;border:2px solid var(--border);overflow:hidden;" id="breakoutCanvas">
-                        <div id="bricksContainer" style="position:absolute;top:10px;left:10px;right:10px;display:flex;flex-wrap:wrap;gap:4px;"></div>
-                        <div style="position:absolute;bottom:10px;left:50%;transform:translateX(-50%);width:60px;height:10px;background:var(--primary2);border-radius:6px;" id="breakPaddle"></div>
-                        <div style="position:absolute;left:50%;top:50%;width:10px;height:10px;border-radius:50%;background:var(--text);transform:translate(-50%,-50%);" id="breakBall"></div>
-                        <div style="position:absolute;top:4px;right:12px;font-size:13px;font-weight:700;color:var(--gray);" id="breakScore">Score: 0</div>
-                        <div style="position:absolute;top:4px;left:12px;font-size:13px;font-weight:700;color:var(--gray);" id="breakLives">❤️ 3</div>
+                    <div style="text-align:center;padding:20px;">
+                        <h3 style="font-size:24px;margin-bottom:12px;">🧱 Breakout</h3>
+                        <p style="color:var(--gray);">Use ← → or A/D to move paddle. Break all bricks!</p>
+                        <div style="position:relative;width:100%;max-width:400px;height:260px;margin:12px auto;background:var(--bg);border-radius:12px;border:2px solid var(--border);overflow:hidden;" id="breakoutCanvas">
+                            <div id="bricksContainer" style="position:absolute;top:10px;left:10px;right:10px;display:flex;flex-wrap:wrap;gap:4px;"></div>
+                            <div style="position:absolute;bottom:10px;left:50%;transform:translateX(-50%);width:60px;height:10px;background:var(--primary2);border-radius:6px;" id="breakPaddle"></div>
+                            <div style="position:absolute;left:50%;top:50%;width:10px;height:10px;border-radius:50%;background:var(--text);transform:translate(-50%,-50%);" id="breakBall"></div>
+                            <div style="position:absolute;top:4px;right:12px;font-size:13px;font-weight:700;color:var(--gray);" id="breakScore">Score: 0</div>
+                            <div style="position:absolute;top:4px;left:12px;font-size:13px;font-weight:700;color:var(--gray);" id="breakLives">❤️ 3</div>
+                        </div>
+                        <button class="primary-btn" style="max-width:150px;margin:0 auto;" onclick="renderBreakout(document.getElementById('gameContent'))">🔄 Restart</button>
                     </div>
-                    <button class="primary-btn" style="max-width:150px;margin:0 auto;" onclick="renderBreakout(document.getElementById('gameContent'))">🔄 Restart</button>
-                </div>
-            `;
+                `;
 
             const paddle = document.getElementById('breakPaddle');
             const ball = document.getElementById('breakBall');
@@ -2468,7 +2691,6 @@
             const pSpeed = 5 + (currentSpeed - 1) * 0.3;
             let bricks = [];
 
-            // Create bricks
             const colors = ['#ef4444', '#f59e0b', '#22c55e', '#3b82f6', '#8b5cf6'];
             for (let row = 0; row < 5; row++) {
                 for (let col = 0; col < 8; col++) {
@@ -2490,35 +2712,27 @@
 
             function gameLoop() {
                 if (!running) return;
-                // Move paddle
                 if (keys.left && px > 0) px -= pSpeed;
                 if (keys.right && px < 340) px += pSpeed;
                 paddle.style.left = px + 'px';
 
-                // Move ball
                 bx += dx;
                 by += dy;
 
-                // Wall bounce
                 if (bx < 0 || bx > 390) dx = -dx;
                 if (by < 0) dy = -dy;
 
-                // Paddle collision
                 if (by > 235 && bx > px - 5 && bx < px + 65) { dy = -Math.abs(dy);
                     dx += (bx - (px + 30)) * 0.05; }
 
-                // Lose life
                 if (by > 260) { lives--;
-                    livesEl.textContent = '❤️ ' + lives;
-                    if (lives <= 0) { running = false;
+                    livesEl.textContent = '❤️ ' + lives; if (lives <= 0) { running = false;
                         showToast('💀 Game Over! Score: ' + score); return; }
                     bx = 200;
                     by = 200;
                     dx = (Math.random() > 0.5 ? 1 : -1) * 2.5;
-                    dy = -2.5;
-                }
+                    dy = -2.5; }
 
-                // Brick collision
                 for (const b of bricks) {
                     if (!b.alive) continue;
                     if (bx > b.x && bx < b.x + b.w && by > b.y && by < b.y + b.h) {
@@ -2603,7 +2817,7 @@
 
             function render() {
                 let html =
-                `<div style="display:grid;grid-template-columns:repeat(${size},1fr);gap:2px;max-width:320px;margin:0 auto;">`;
+                    `<div style="display:grid;grid-template-columns:repeat(${size},1fr);gap:2px;max-width:320px;margin:0 auto;">`;
                 for (let y = 0; y < size; y++) {
                     for (let x = 0; x < size; x++) {
                         const isRevealed = revealed[y][x];
@@ -2619,9 +2833,8 @@
                             content = '🚩';
                             bg = 'var(--warning)22';
                         }
-                        const isMine = grid[y][x] === -1;
                         html += `<div class="ttt-cell" style="font-size:20px;cursor:pointer;background:${bg};border-color:${isRevealed ? 'var(--primary2)' : 'var(--border)'};"
-                                  data-x="${x}" data-y="${y}">${content}</div>`;
+                                      data-x="${x}" data-y="${y}">${content}</div>`;
                     }
                 }
                 html += '</div>';
@@ -2647,7 +2860,6 @@
                         }
                         reveal(x, y);
                         render();
-                        // Check win
                         let allRevealed = true;
                         for (let y2 = 0; y2 < size; y2++) {
                             for (let x2 = 0; x2 < size; x2++) {
@@ -2702,7 +2914,6 @@
                 const notes = [];
                 const baseFreq = freq;
 
-                // Generate a melody based on pattern
                 for (let i = 0; i < 16; i++) {
                     const offset = Math.sin(i * 0.7 + pattern) * 0.2;
                     const freq2 = baseFreq * (1 + offset);
@@ -2759,10 +2970,6 @@
             document.getElementById('gameGrid').classList.remove('hidden');
             document.getElementById('gamePlayArea').classList.add('hidden');
             document.getElementById('gameContent').innerHTML = '';
-            // Cleanup any game intervals
-            if (document.querySelector('.snake-board')) {
-                // Cleanup snake
-            }
         };
 
         // ─── INIT ───
