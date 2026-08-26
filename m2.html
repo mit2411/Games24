@@ -1,0 +1,385 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Meet Patel | Portfolio</title>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;800&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-dark: #070913;
+            --bg-card: rgba(18, 24, 43, 0.6);
+            --border-color: rgba(255, 255, 255, 0.08);
+            --border-hover: #8b5cf6;
+            --primary: #8b5cf6;
+            --primary-glow: rgba(139, 92, 246, 0.4);
+            --secondary: #06b6d4;
+            --text-main: #f8fafc;
+            --text-muted: #94a3b8;
+            --green: #22c55e;
+            --font-main: 'Plus Jakarta Sans', sans-serif;
+            --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: var(--font-main);
+            background-color: var(--bg-dark);
+            color: var(--text-main);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            overflow-x: hidden;
+        }
+
+        /* Ambient Glow Background */
+        body::before {
+            content: "";
+            position: fixed;
+            inset: 0;
+            z-index: -2;
+            background: 
+                radial-gradient(circle at 15% 15%, rgba(139, 92, 246, 0.18), transparent 35%),
+                radial-gradient(circle at 85% 25%, rgba(6, 182, 212, 0.12), transparent 30%),
+                radial-gradient(circle at 50% 80%, rgba(139, 92, 246, 0.12), transparent 35%);
+        }
+
+        .grid-bg {
+            position: fixed;
+            inset: 0;
+            z-index: -1;
+            opacity: 0.15;
+            background-image: 
+                linear-gradient(rgba(255, 255, 255, 0.05) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(255, 255, 255, 0.05) 1px, transparent 1px);
+            background-size: 50px 50px;
+            pointer-events: none;
+        }
+
+        .container {
+            width: min(1120px, 90%);
+            margin: 0 auto;
+        }
+
+        main {
+            flex: 1;
+            padding-top: 120px;
+            padding-bottom: 80px;
+        }
+
+        /* Navbar */
+        .navbar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 80px;
+            z-index: 1000;
+            background: rgba(7, 9, 19, 0.8);
+            backdrop-filter: blur(16px);
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .nav-container {
+            height: 100%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 26px;
+            font-weight: 800;
+            color: var(--text-main);
+            text-decoration: none;
+            cursor: pointer;
+        }
+
+        .logo span { color: var(--primary); }
+
+        .nav-links {
+            display: flex;
+            gap: 25px;
+            list-style: none;
+        }
+
+        .nav-links a {
+            color: var(--text-muted);
+            font-size: 14px;
+            font-weight: 600;
+            text-decoration: none;
+            transition: var(--transition);
+            cursor: pointer;
+        }
+
+        .nav-links a:hover,
+        .nav-links a.active {
+            color: var(--text-main);
+            text-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
+        }
+
+        /* Section Visibility Switching */
+        .page-section {
+            display: none;
+            animation: fadeIn 0.4s ease-in-out forwards;
+        }
+
+        .page-section.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Cards & Styling */
+        .glass-card {
+            background: var(--bg-card);
+            backdrop-filter: blur(12px);
+            border: 1px solid var(--border-color);
+            border-radius: 20px;
+            padding: 30px;
+            transition: var(--transition);
+        }
+
+        .glass-card:hover {
+            border-color: var(--border-hover);
+            transform: translateY(-4px);
+            box-shadow: 0 15px 30px -10px var(--primary-glow);
+        }
+
+        .gradient-text {
+            background: linear-gradient(135deg, #fff 30%, #a78bfa 70%, #67e8f9 100%);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+
+        .page-title {
+            font-size: 42px;
+            font-weight: 800;
+            margin-bottom: 10px;
+        }
+
+        .page-subtitle {
+            color: var(--text-muted);
+            font-size: 16px;
+            margin-bottom: 40px;
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 12px 24px;
+            border-radius: 12px;
+            font-size: 14px;
+            font-weight: 700;
+            text-decoration: none;
+            transition: var(--transition);
+            border: none;
+            cursor: pointer;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--primary), #6d28d9);
+            color: white;
+            box-shadow: 0 8px 25px -5px var(--primary-glow);
+        }
+
+        .btn-outline {
+            border: 1px solid var(--border-color);
+            background: var(--bg-card);
+            color: white;
+        }
+
+        /* Layout Grids */
+        .hero-grid { display: grid; grid-template-columns: 1.2fr 0.8fr; gap: 50px; align-items: center; }
+        .badge { display: inline-flex; align-items: center; gap: 8px; padding: 6px 14px; border-radius: 20px; background: rgba(34, 197, 94, 0.1); border: 1px solid rgba(34, 197, 94, 0.3); color: #86efac; font-size: 12px; }
+        .dot { width: 8px; height: 8px; background: var(--green); border-radius: 50%; box-shadow: 0 0 10px var(--green); }
+        .hero h1 { font-size: 60px; line-height: 1.1; margin: 20px 0; }
+        .avatar { width: 130px; height: 130px; border-radius: 50%; background: linear-gradient(135deg, var(--primary), var(--secondary)); display: grid; place-items: center; font-size: 40px; font-weight: 800; margin: 0 auto 20px; }
+        
+        .skills-grid, .projects-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px; }
+        .bar { height: 6px; background: rgba(255,255,255,0.1); border-radius: 10px; margin: 15px 0 10px; overflow: hidden; }
+        .fill { height: 100%; background: linear-gradient(90deg, var(--primary), var(--secondary)); }
+
+        .form-group { margin-bottom: 15px; }
+        input, textarea { width: 100%; padding: 14px; background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 10px; color: white; outline: none; }
+        input:focus, textarea:focus { border-color: var(--primary); }
+
+        footer {
+            padding: 30px 0;
+            border-top: 1px solid var(--border-color);
+            text-align: center;
+            color: var(--text-muted);
+            font-size: 13px;
+            margin-top: auto;
+        }
+
+        @media (max-width: 768px) {
+            .hero-grid { grid-template-columns: 1fr; }
+            .nav-links { gap: 12px; font-size: 12px; }
+        }
+    </style>
+</head>
+<body>
+    <div class="grid-bg"></div>
+
+    <!-- Navigation Header -->
+    <header class="navbar">
+        <div class="container nav-container">
+            <a onclick="showPage('home')" class="logo">Meet<span>.</span></a>
+            <ul class="nav-links">
+                <li><a onclick="showPage('home')" class="nav-btn active" id="nav-home">Home</a></li>
+                <li><a onclick="showPage('about')" class="nav-btn" id="nav-about">About</a></li>
+                <li><a onclick="showPage('skills')" class="nav-btn" id="nav-skills">Skills</a></li>
+                <li><a onclick="showPage('projects')" class="nav-btn" id="nav-projects">Projects</a></li>
+                <li><a onclick="showPage('resume')" class="nav-btn" id="nav-resume">Resume</a></li>
+                <li><a onclick="showPage('contact')" class="nav-btn" id="nav-contact">Contact</a></li>
+            </ul>
+        </div>
+    </header>
+
+    <main class="container">
+        <!-- 1. HOME SECTION -->
+        <section id="home" class="page-section active">
+            <div class="hero-grid">
+                <div>
+                    <div class="badge"><span class="dot"></span> Open to internship opportunities</div>
+                    <h1>Hi, I'm <br><span class="gradient-text">Meet Patel.</span></h1>
+                    <p style="color:var(--text-muted); font-size:18px; margin-bottom:30px;">Computer Science Engineering student interested in web development, application development, programming and cybersecurity.</p>
+                    <div style="display:flex; gap:15px;">
+                        <button onclick="showPage('projects')" class="btn btn-primary">View Projects →</button>
+                        <button onclick="showPage('contact')" class="btn btn-outline">Contact Me</button>
+                    </div>
+                </div>
+                <div class="glass-card" style="text-align:center;">
+                    <div class="avatar">MP</div>
+                    <h2>Meet Patel</h2>
+                    <p style="color:var(--text-muted); margin-top:8px;">CSE Student • Web Developer • Cybersecurity Enthusiast</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- 2. ABOUT SECTION -->
+        <section id="about" class="page-section">
+            <h1 class="page-title">About <span class="gradient-text">Me</span></h1>
+            <p class="page-subtitle">A developer who likes building things.</p>
+            <div class="glass-card">
+                <h3>Who am I?</h3>
+                <p style="color:var(--text-muted); line-height:1.7; margin-top:15px;">
+                    I'm Meet Patel, a Computer Science Engineering student at GLS University, Ahmedabad. My technical interests include HTML, CSS, JavaScript, C++, Python, web development, application development, and cybersecurity. I'm particularly interested in ethical hacking and bug hunting.
+                </p>
+            </div>
+        </section>
+
+        <!-- 3. SKILLS SECTION -->
+        <section id="skills" class="page-section">
+            <h1 class="page-title">Technical <span class="gradient-text">Skills</span></h1>
+            <p class="page-subtitle">What I work with on a regular basis.</p>
+            <div class="skills-grid">
+                <div class="glass-card">
+                    <div style="display:flex; justify-content:space-between;"><strong>HTML & CSS</strong><span style="color:var(--secondary)">90%</span></div>
+                    <div class="bar"><div class="fill" style="width:90%"></div></div>
+                </div>
+                <div class="glass-card">
+                    <div style="display:flex; justify-content:space-between;"><strong>JavaScript</strong><span style="color:var(--secondary)">80%</span></div>
+                    <div class="bar"><div class="fill" style="width:80%"></div></div>
+                </div>
+                <div class="glass-card">
+                    <div style="display:flex; justify-content:space-between;"><strong>C++</strong><span style="color:var(--secondary)">80%</span></div>
+                    <div class="bar"><div class="fill" style="width:80%"></div></div>
+                </div>
+                <div class="glass-card">
+                    <div style="display:flex; justify-content:space-between;"><strong>Python</strong><span style="color:var(--secondary)">75%</span></div>
+                    <div class="bar"><div class="fill" style="width:75%"></div></div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 4. PROJECTS SECTION -->
+        <section id="projects" class="page-section">
+            <h1 class="page-title">My <span class="gradient-text">Projects</span></h1>
+            <p class="page-subtitle">Things I'm currently building and working on.</p>
+            <div class="projects-grid">
+                <div class="glass-card">
+                    <h3>NeuraChat</h3>
+                    <p style="color:var(--text-muted); font-size:14px; margin-top:10px;">AI-powered chat application concept focused on interactive conversational experiences.</p>
+                </div>
+                <div class="glass-card">
+                    <h3>AI Reel Generator</h3>
+                    <p style="color:var(--text-muted); font-size:14px; margin-top:10px;">Application concept for short-form video content generation using AI.</p>
+                </div>
+                <div class="glass-card">
+                    <h3>Developer Portfolio</h3>
+                    <p style="color:var(--text-muted); font-size:14px; margin-top:10px;">Modern responsive portfolio website built with clean CSS glassmorphism.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- 5. RESUME SECTION -->
+        <section id="resume" class="page-section">
+            <h1 class="page-title">My <span class="gradient-text">Resume</span></h1>
+            <div class="glass-card" style="max-width: 500px; margin: 30px auto; text-align: center;">
+                <h2>Meet Patel</h2>
+                <p style="color:var(--text-muted); margin: 10px 0 20px;">Computer Science Engineering Student</p>
+                <p><strong>Email:</strong> mitpatel24112007@gmail.com</p>
+                <p style="margin-top:5px;"><strong>Phone:</strong> 7096660937</p>
+                <br>
+                <a href="#" class="btn btn-primary">Download CV ↓</a>
+            </div>
+        </section>
+
+        <!-- 6. CONTACT SECTION -->
+        <section id="contact" class="page-section">
+            <h1 class="page-title" style="text-align:center;">Get In <span class="gradient-text">Touch</span></h1>
+            <form class="glass-card" style="max-width:500px; margin:30px auto;" id="contactForm">
+                <div class="form-group"><input type="text" id="name" placeholder="Your Name" required></div>
+                <div class="form-group"><input type="email" id="email" placeholder="Your Email" required></div>
+                <div class="form-group"><textarea id="message" rows="5" placeholder="Your Message" required></textarea></div>
+                <button type="submit" class="btn btn-primary" style="width:100%;">Send Message →</button>
+            </form>
+        </section>
+    </main>
+
+    <footer>
+        <div class="container">© 2026 Meet Patel · Built with HTML, CSS & JS</div>
+    </footer>
+
+    <!-- Tab Switching Logic -->
+    <script>
+        function showPage(pageId) {
+            // Hide all sections
+            const sections = document.querySelectorAll('.page-section');
+            sections.forEach(section => section.classList.remove('active'));
+
+            // Remove active status from all links
+            const navLinks = document.querySelectorAll('.nav-btn');
+            navLinks.forEach(link => link.classList.remove('active'));
+
+            // Show current section and activate nav button
+            document.getElementById(pageId).classList.add('active');
+            const activeNav = document.getElementById('nav-' + pageId);
+            if (activeNav) activeNav.classList.add('active');
+
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        // Contact Form Logic
+        document.getElementById("contactForm").addEventListener("submit", function(e) {
+            e.preventDefault();
+            const name = document.getElementById("name").value;
+            const email = document.getElementById("email").value;
+            const message = document.getElementById("message").value;
+            window.location.href = `mailto:mitpatel24112007@gmail.com?subject=Contact from ${name}&body=${message} (%0D%0AFrom: ${email})`;
+        });
+    </script>
+</body>
+</html>
